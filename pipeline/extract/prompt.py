@@ -71,7 +71,9 @@ def response_json_schema() -> dict:
         "type": "object",
         "properties": {"records": {"type": "array", "items": {
             "type": "object", "properties": props,
-            "required": ["chunk_ref", "record_type", "object_type", "object_raw", "quote"],
+            # Строгий режим AI Studio требует, чтобы все поля были в required;
+            # «необязательность» выражается типом null.
+            "required": list(props),
             "additionalProperties": False,
         }}},
         "required": ["records"],

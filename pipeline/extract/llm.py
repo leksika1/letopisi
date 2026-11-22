@@ -193,7 +193,10 @@ class LLMClient:
                 self._log_usage(usage)
                 return r.choices[0].message.content or "", usage
             except BadRequestError as e:
-                if self._json_schema_ok:
+                # При параллельных запросах флаг мог переключить другой поток — смотрим на формат ЭТОГО запроса.
+                if fmt.get("type") == "json_schema":
+                    if not self._json_schema_ok:
+                        continue
                     log.info("response_format=json_schema не поддержан (%s) — переключаюсь на json_object", e.status_code)
                     self._json_schema_ok = False
                     continue

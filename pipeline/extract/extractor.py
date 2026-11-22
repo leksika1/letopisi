@@ -12,6 +12,7 @@
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from pipeline.anchor import anchor
@@ -51,6 +52,33 @@ def draft_from_llm(r: LLMRecord) -> Draft:
     return Draft(f, quote, None, "llm", False, [note] if note else [], chunk_ref=ref)
 
 
+_NUM_THEN_REST = re.compile(r"^\s*([-+−]?\d+(?:[.,]\d+)?(?:\s*[-–/]\s*\d+(?:[.,]\d+)?)?)\s*(\S.*)?$")
+
+
+def split_value(value_raw, value_num, unit):
+    """«10,1°С» + unit «°С» → ("10,1", 10.1, "°С"): единица не дублируется в value_raw.
+
+    Модель иногда кладёт единицу и в value_raw, и в unit («25 ловушко-суток» + «ловушко-сутки»).
+    Если value_raw = число + хвост и единица известна — хвост отрезаем; если единицы нет — хвост и есть единица.
+    """
+    if not isinstance(value_raw, str) or not value_raw.strip():
+        return value_raw, value_num, unit
+    m = _NUM_THEN_REST.match(value_raw)
+    if not m:
+        return value_raw.strip(), value_num, unit
+    num, rest = m.group(1).strip(), (m.group(2) or "").strip()
+    if value_num is None and not re.search(r"[-–/]", num[1:]):
+        try:
+            value_num = float(num.replace(",", ".").replace("−", "-"))
+        except ValueError:
+            pass
+    if rest:
+        if not unit:
+            unit = rest
+        return num, value_num, unit
+    return num, value_num, unit
+
+
 def _clean(v):
     if isinstance(v, str):
         v = v.strip()
@@ -66,6 +94,7 @@ def build(d: Draft, chunk: dict, dc: DocContext, obs_id: int) -> dict:
     sid = dc.sections.chunk_section.get(chunk["id"], chunk.get("section_id")) if dc.sections else chunk.get("section_id")
     obs = {k: f.get(k) for k in OBS_FIELDS}
     obs["person_ids"] = []
+    obs["value_raw"], obs["value_num"], obs["unit"] = split_value(obs["value_raw"], obs["value_num"], obs["unit"])
 
     # --- привязка цитаты
     meta = dc.lines.get(chunk["id"]) or {}
