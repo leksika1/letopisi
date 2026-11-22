@@ -145,6 +145,23 @@ def test_office_original(client: TestClient, ext: str) -> None:
     check(client.get(url + "/pages/1.png"), "/documents/{id}/pages/{n}.png", "get", 404)
 
 
+def test_uploaded_pdf_with_scanned_cover(client: TestClient) -> None:
+    with pymupdf.open() as pdf:
+        pdf.new_page()
+        pdf.new_page().insert_text(
+            (30, 50),
+            "A page of digital text with observations from the nature reserve.",
+        )
+        content = pdf.tobytes()
+    response = client.post(
+        "/api/documents",
+        files={"file": ("mixed.pdf", content)},
+        data={"title": "Книга", "year": "2020"},
+    )
+    check(response, "/documents", "post", 201)
+    assert response.json()["pages"] == 2 and response.json()["has_text_layer"] is True
+
+
 def test_edit_history_and_rollback(client: TestClient) -> None:
     url = "/api/observations/1"
     shape = "/observations/{id}"

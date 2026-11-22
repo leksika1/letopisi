@@ -8,9 +8,17 @@ from .common import Fragment, Stats, row_text
 
 
 def fragments(path: Path, stats: Stats) -> Iterator[Fragment]:
+    leading_rows = 0
     if path.suffix.lower() == ".csv":
         with path.open(encoding="utf-8-sig", newline="") as stream:
-            sample = stream.read(16384)
+            for first in stream:
+                if first.strip():
+                    break
+                leading_rows += 1
+            else:
+                return
+            sample = first + stream.read(16384)
+            sample = "\n".join(line for line in sample.splitlines() if line.strip())
         try:
             sep = csv.Sniffer().sniff(sample, delimiters=",;\t").delimiter
         except csv.Error:
@@ -22,6 +30,7 @@ def fragments(path: Path, stats: Stats) -> Iterator[Fragment]:
                 header=None,
                 dtype=str,
                 keep_default_na=False,
+                skiprows=leading_rows,
                 skip_blank_lines=False,
                 encoding="utf-8-sig",
             )
@@ -31,9 +40,16 @@ def fragments(path: Path, stats: Stats) -> Iterator[Fragment]:
             path, sheet_name=None, header=None, dtype=str, keep_default_na=False
         )
     for sheet, frame in sheets.items():
-        rows = iter(frame.itertuples(index=False, name=None))
-        headers = [str(v).strip() for v in next(rows, ())]
+        rows = enumerate(
+            frame.itertuples(index=False, name=None), start=leading_rows + 1
+        )
+        for _, cells in rows:
+            headers = [str(v).strip() for v in cells]
+            if any(headers):
+                break
+        else:
+            continue
         stats.tables += 1
-        for number, cells in enumerate(rows, start=2):
+        for number, cells in rows:
             if text := row_text(headers, [str(v).strip() for v in cells]):
                 yield Fragment("table_row", {"sheet": str(sheet), "row": number}, text)

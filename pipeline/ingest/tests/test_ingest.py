@@ -227,3 +227,31 @@ def test_spreadsheet_coordinates(tmp_path: Path, ext: str) -> None:
     rows = read_chunks(tmp_path, 10)
     assert rows[0]["locator"] == {"sheet": "Учет", "row": 2}
     assert rows[0]["text"] == "Вид: Лось; Число: 2" and rows[0]["lines"] is None
+
+
+@pytest.mark.parametrize("ext", ["xlsx", "csv"])
+def test_blank_rows_before_header_keep_original_coordinates(
+    tmp_path: Path, ext: str
+) -> None:
+    path = tmp_path / f"Учет.{ext}"
+    if ext == "xlsx":
+        book = Workbook()
+        book.active.append([None, None])
+        book.active.append(["Вид", "Число"])
+        book.active.append([None, None])
+        book.active.append(["Лось", 2])
+        book.save(path)
+    else:
+        path.write_text("\nВид;Число\n\nЛось;2\n", encoding="utf-8-sig")
+    ingest(path, 4, tmp_path)
+    rows = read_chunks(tmp_path, 4)
+    assert [(r["locator"]["row"], r["text"]) for r in rows] == [
+        (4, "Вид: Лось; Число: 2")
+    ]
+
+
+def test_empty_csv(tmp_path: Path) -> None:
+    src = tmp_path / "empty.csv"
+    src.write_text("\n", encoding="utf-8-sig")
+    stats = ingest(src, 4, tmp_path)
+    assert stats.chunks == 0 and read_chunks(tmp_path, 4) == []

@@ -76,7 +76,7 @@ def inspect_file(path: Path, fmt: str) -> tuple[int | None, bool, str | None]:
                 first = doc[0]
                 return (
                     doc.page_count,
-                    len(first.get_text().strip()) >= 50,
+                    any(len(page.get_text().strip()) >= 50 for page in doc),
                     ("spread" if first.rect.width > first.rect.height else "single"),
                 )
         except (RuntimeError, ValueError) as exc:
