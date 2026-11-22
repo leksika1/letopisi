@@ -1,0 +1,150 @@
+{
+ "generated_at": "2026-11-22T11:38:49Z",
+ "gold_version": "sanity_2020.csv@ec362e98 (scope=object)",
+ "extractor_version": "core-0.1+p1",
+ "is_placeholder": false,
+ "n_gold_records": 22,
+ "n_extracted_records": 22,
+ "record_level": {
+  "field": "record",
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "n": 22
+ },
+ "fields": [
+  {
+   "field": "date",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 17
+  },
+  {
+   "field": "year",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 22
+  },
+  {
+   "field": "species_ru",
+   "precision": 0.955,
+   "recall": 0.955,
+   "f1": 0.955,
+   "n": 22
+  },
+  {
+   "field": "species_lat",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 22
+  },
+  {
+   "field": "toponym",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 4
+  },
+  {
+   "field": "habitat",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 2
+  },
+  {
+   "field": "numeric",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 4
+  },
+  {
+   "field": "phenophase",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 14
+  },
+  {
+   "field": "observer",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 22
+  },
+  {
+   "field": "page",
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "n": 22
+  }
+ ],
+ "by_document": [
+  {
+   "document_id": 3,
+   "record_level": {
+    "field": "record",
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "n": 22
+   }
+  }
+ ],
+ "error_examples": [
+  {
+   "kind": "wrong_value",
+   "field": "species_ru",
+   "document_id": 3,
+   "pdf_page": 449,
+   "observation_id": 30004769,
+   "expected": "Полевка красно-серая",
+   "actual": "красно-серые полёвки (Myodes rufocanus)",
+   "quote": "В лагере у подножия Калкупи в июле наблюдали красно-\nсерых полевок (Myodes rufocanus) – они приходили есть яблоки (рис. 8.482).",
+   "comment": null
+  }
+ ],
+ "unsupported": [
+  {
+   "document_id": 1,
+   "pdf_page": null,
+   "reason": "no_text_layer",
+   "comment": "скан без текстового слоя: нужен OCR (pipeline.ingest + Yandex Vision); не обработан"
+  },
+  {
+   "document_id": 2,
+   "pdf_page": null,
+   "reason": "no_text_layer",
+   "comment": "скан без текстового слоя: нужен OCR (pipeline.ingest + Yandex Vision); не обработан"
+  },
+  {
+   "document_id": 3,
+   "pdf_page": 471,
+   "reason": "image_only",
+   "comment": "страница без текстового слоя (картинка) в PDF с текстом"
+  },
+  {
+   "document_id": 3,
+   "pdf_page": 611,
+   "reason": "image_only",
+   "comment": "страница без текстового слоя (картинка) в PDF с текстом"
+  },
+  {
+   "document_id": 3,
+   "pdf_page": 620,
+   "reason": "image_only",
+   "comment": "страница без текстового слоя (картинка) в PDF с текстом"
+  },
+  {
+   "document_id": 3,
+   "pdf_page": 629,
+   "reason": "image_only",
+   "comment": "страница без текстового слоя (картинка) в PDF с текстом"
+  }
+ ]
+}
