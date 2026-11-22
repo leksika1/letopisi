@@ -22,7 +22,9 @@ def fragments(path: Path, stats: Stats) -> Iterator[Fragment]:
         try:
             sep = csv.Sniffer().sniff(sample, delimiters=",;\t").delimiter
         except csv.Error:
-            sep = ","
+            # Missing trailing cells make Sniffer reject otherwise valid CSVs.
+            # Use the header's column count, respecting quoted delimiters.
+            sep = max(",;\t", key=lambda d: len(next(csv.reader([first], delimiter=d))))
         sheets = {
             path.stem: pd.read_csv(
                 path,

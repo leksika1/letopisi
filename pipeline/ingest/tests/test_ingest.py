@@ -26,7 +26,18 @@ def read_chunks(data: Path, doc: int) -> list[dict]:
     return chunks
 
 
-def test_text_and_table(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "rotation,moose_bbox",
+    [
+        (0, (0.075, 0.20, 0.375, 0.26)),
+        (90, (0.74, 0.075, 0.80, 0.375)),
+        (180, (0.625, 0.74, 0.925, 0.80)),
+        (270, (0.20, 0.625, 0.26, 0.925)),
+    ],
+)
+def test_text_and_table(
+    tmp_path: Path, rotation: int, moose_bbox: tuple[float, ...]
+) -> None:
     path = tmp_path / "text.pdf"
     with pymupdf.open() as pdf:
         page = pdf.new_page(width=400, height=500)
@@ -42,6 +53,8 @@ def test_text_and_table(tmp_path: Path) -> None:
         ):
             page.insert_text((38, 88 + 30 * i), a)
             page.insert_text((158, 88 + 30 * i), b)
+        page.insert_text((198, 475), "17")
+        page.set_rotation(rotation)
         pdf.save(path)
     stats = ingest(path, 8, tmp_path)
     rows = read_chunks(tmp_path, 8)
@@ -50,6 +63,12 @@ def test_text_and_table(tmp_path: Path) -> None:
     row = next(r for r in rows if r["kind"] == "table_row" and "Moose" in r["text"])
     assert row["text"] == "Species: Moose; Count: 7"
     assert row["lines"][0]["bbox"] != row["lines"][1]["bbox"]
+    assert row["lines"][0]["bbox"] == pytest.approx(moose_bbox, abs=0.001)
+    assert row["locator"]["printed_page"] == "17"
+    assert [r["text"] for r in rows if r["kind"] == "table_row"] == [
+        "Species: Moose; Count: 7",
+        "Species: Bear; Count: 2",
+    ]
     assert sum("Moose" in r["text"] for r in rows) == 1
 
 
@@ -255,3 +274,19 @@ def test_empty_csv(tmp_path: Path) -> None:
     src.write_text("\n", encoding="utf-8-sig")
     stats = ingest(src, 4, tmp_path)
     assert stats.chunks == 0 and read_chunks(tmp_path, 4) == []
+
+
+@pytest.mark.parametrize("delimiter", [";", "\t"])
+def test_missing_csv_trailing_field(tmp_path: Path, delimiter: str) -> None:
+    src = tmp_path / "records.csv"
+    src.write_text(
+        f'"Species, Latin"{delimiter}Count{delimiter}Place\n'
+        f"Moose{delimiter}3\nBear{delimiter}1{delimiter}Hill\n",
+        encoding="utf-8",
+    )
+    ingest(src, 4, tmp_path)
+    rows = read_chunks(tmp_path, 4)
+    assert [r["text"] for r in rows] == [
+        "Species, Latin: Moose; Count: 3",
+        "Species, Latin: Bear; Count: 1; Place: Hill",
+    ]

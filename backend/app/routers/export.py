@@ -132,17 +132,16 @@ def export(request: Request, format: Literal["csv", "xlsx"]) -> Response:
         sheet.title = "Наблюдения"
         sheet.append(HEADERS)
         widths = [len(h) for h in HEADERS]
-        for values, caption in rows:
+        for row_number, (values, caption) in enumerate(rows, start=2):
             link = values[13]
             values[13] = caption
-            sheet.append(values)
-            for i, cell in enumerate(sheet[sheet.max_row]):
-                if isinstance(cell.value, str):
+            for column, value in enumerate(values, start=1):
+                cell = sheet.cell(row_number, column, value)
+                if isinstance(value, str):
                     cell.data_type = "s"
-                widths[i] = max(
-                    widths[i], len(str(cell.value)) if cell.value is not None else 0
-                )
-            ref = sheet.cell(sheet.max_row, 14)
+                if value is not None:
+                    widths[column - 1] = max(widths[column - 1], len(str(value)))
+            ref = sheet.cell(row_number, 14)
             ref.hyperlink, ref.style = link, "Hyperlink"
         sheet.freeze_panes = "A2"
         sheet.auto_filter.ref = sheet.dimensions

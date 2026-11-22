@@ -12,6 +12,25 @@ from . import ocr
 from .common import Box, Fragment, Stats, row_text
 
 
+def catalog_book(filename: str) -> dict[str, str | int | None]:
+    catalog = Path(__file__).resolve().parents[2] / "contracts/fixtures/documents.json"
+    books = json.loads(catalog.read_text(encoding="utf-8"))
+    return next(
+        (b for b in books if b["filename"].casefold() == filename.casefold()), {}
+    )
+
+
+def has_text_layer(page: pymupdf.Page) -> bool:
+    return len(page.get_text().strip()) >= 50
+
+
+def is_spread_scan(page: pymupdf.Page, catalog_layout: str | int | None) -> bool:
+    if catalog_layout == "single" or page.rect.width <= page.rect.height:
+        return False
+    # An unknown portrait sheet can appear horizontal solely due to PDF rotation.
+    return catalog_layout == "spread" or page.cropbox.width > page.cropbox.height
+
+
 @dataclass
 class TableHeader:
     labels: list[str]
@@ -125,18 +144,14 @@ def scan_fragments(
 
 def fragments(path: Path, pages: Path, cache: Path, stats: Stats) -> Iterator[Fragment]:
     pages.mkdir(parents=True, exist_ok=True)
-    catalog = Path(__file__).resolve().parents[2] / "contracts/fixtures/documents.json"
-    books = json.loads(catalog.read_text(encoding="utf-8"))
-    book: dict[str, str | int | None] = next(
-        (b for b in books if b["filename"].casefold() == path.name.casefold()), {}
-    )
+    book = catalog_book(path.name)
     with pymupdf.open(path) as document:
         stats.pages = len(document)
         previous = None
         for number, page in enumerate(document, start=1):
             png = pages / f"{number}.png"
             page.get_pixmap(dpi=200, alpha=False).save(png)
-            if len(page.get_text().strip()) < 50:
+            if not has_text_layer(page):
                 stats.scans += 1
                 yield from scan_fragments(
                     png,
@@ -144,7 +159,7 @@ def fragments(path: Path, pages: Path, cache: Path, stats: Stats) -> Iterator[Fr
                     cache,
                     stats,
                     book.get("year") == 1995,
-                    allow_spreads=book.get("layout") != "single",
+                    allow_spreads=is_spread_scan(page, book.get("layout")),
                 )
                 continue
 
@@ -153,26 +168,42 @@ def fragments(path: Path, pages: Path, cache: Path, stats: Stats) -> Iterator[Fr
                 flags=pymupdf.TEXTFLAGS_DICT & ~pymupdf.TEXT_PRESERVE_IMAGES,
                 sort=True,
             )["blocks"]
+            source_bounds = page.rect * page.derotation_matrix
             footer = [
                 ("".join(s["text"] for s in ln["spans"])).strip()
                 for b in blocks
                 for ln in b.get("lines", [])
-                if relative(page, ln["bbox"])[1] > 0.85
+                if ln["bbox"][1] > 0.85 * source_bounds.height
             ]
             printed = next((s for s in reversed(footer) if s.isdecimal()), None)
             locator = {"pdf_page": number, "half": None, "printed_page": printed}
             areas = []
             ordered = []
-            for table_index, table in enumerate(page.find_tables().tables):
+            # Text blocks use unrotated coordinates; PyMuPDF's table finder
+            # uses the current page orientation to infer rows and columns.
+            rotation = page.rotation
+            try:
+                if rotation:
+                    page.set_rotation(0)
+                tables = [(t, t.extract()) for t in page.find_tables().tables]
+            finally:
+                if rotation:
+                    page.set_rotation(rotation)
+            for table_index, (table, values) in enumerate(tables):
                 stats.tables += 1
                 areas.append(pymupdf.Rect(table.bbox))
                 rows = [
-                    [" ".join((v or "").split()) for v in cells]
-                    for cells in table.extract()
+                    [" ".join((v or "").split()) for v in cells] for cells in values
                 ]
                 if not rows:
                     continue
-                rect = relative(page, table.bbox)
+                left, top, right, bottom = table.bbox
+                rect = (
+                    left / source_bounds.width,
+                    top / source_bounds.height,
+                    right / source_bounds.width,
+                    bottom / source_bounds.height,
+                )
                 if (
                     table_index == 0
                     and previous is not None
@@ -185,10 +216,12 @@ def fragments(path: Path, pages: Path, cache: Path, stats: Stats) -> Iterator[Fr
                     if table.header.external:
                         areas.append(pymupdf.Rect(table.header.bbox))
                 previous = TableHeader(headers, number, rect[0], rect[2])
+                row_geometry = table.rows
                 for n, clean in enumerate(rows[first:], start=first):
                     value = row_text(headers, clean)
                     if value:
-                        box = relative(page, table.rows[n].bbox)
+                        row = row_geometry[n]
+                        box = relative(page, row.bbox)
                         spans = []
                         offset = 0
                         for col, cell in enumerate(clean):
@@ -201,13 +234,13 @@ def fragments(path: Path, pages: Path, cache: Path, stats: Stats) -> Iterator[Fr
                             )
                             start = offset + len(label) + 2
                             end = start + len(cell)
-                            bounds = table.rows[n].cells[col] or table.rows[n].bbox
+                            bounds = row.cells[col] or row.bbox
                             spans.append((start, end, relative(page, bounds)))
                             offset = end + 2
                         ordered.append(
                             (
-                                box[1],
-                                box[0],
+                                row.bbox[1],
+                                row.bbox[0],
                                 Fragment(
                                     "table_row",
                                     locator,
@@ -228,14 +261,17 @@ def fragments(path: Path, pages: Path, cache: Path, stats: Stats) -> Iterator[Fr
                     s = "".join(span["text"] for span in line["spans"])
                     if s.strip():
                         lines.append(s)
-                        boxes.append(relative(page, line["bbox"]))
+                        boxes.append(line["bbox"])
                 if lines:
                     ordered.append(
                         (
                             boxes[0][1],
                             boxes[0][0],
                             Fragment(
-                                "paragraph", locator, "\n".join(lines), boxes=boxes
+                                "paragraph",
+                                locator,
+                                "\n".join(lines),
+                                boxes=[relative(page, b) for b in boxes],
                             ),
                         )
                     )

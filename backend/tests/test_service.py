@@ -105,3 +105,26 @@ def test_invalid_fixture_rolls_back(database: Engine, tmp_path: Path) -> None:
     with database.connect() as conn:
         assert conn.scalar(text("SELECT count(*) FROM documents")) == 0
         assert conn.scalar(text("SELECT count(*) FROM observations")) == 0
+
+
+@pytest.mark.parametrize(
+    "same_hash", [False, True], ids=["occupied-id", "hash-at-other-id"]
+)
+def test_seed_rejects_conflicting_document(database: Engine, same_hash: bool) -> None:
+    source = read_rows(FIXTURES / "documents.json")[0]
+    with database.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO documents(id,title,filename,format,sha256) "
+                "VALUES (:id,'Upload','uploaded.pdf','pdf',:sha)"
+            ),
+            {
+                "id": 100 if same_hash else source["id"],
+                "sha": source["sha256"] if same_hash else "a" * 64,
+            },
+        )
+    with pytest.raises(ValueError, match="uploaded.pdf"):
+        load_fixtures(database)
+    with database.connect() as conn:
+        assert conn.scalar(text("SELECT count(*) FROM documents")) == 1
+        assert conn.scalar(text("SELECT count(*) FROM observations")) == 0

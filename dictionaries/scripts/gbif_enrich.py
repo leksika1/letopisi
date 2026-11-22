@@ -22,6 +22,70 @@ TAXON = [
 NAME = ["id", "taxon_id", "name", "lang", "kind"]
 
 
+def read_csv(path: Path) -> list[dict[str, Any]]:
+    with path.open(encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+class TaxonIds:
+    def __init__(
+        self,
+        known: list[dict[str, Any]],
+        names: list[dict[str, Any]],
+        source: list[dict[str, Any]],
+    ) -> None:
+        self.by_id = {int(r["id"]): r for r in known}
+        self.by_name = {r["name_lat"].casefold(): int(r["id"]) for r in known}
+        self.by_key = {
+            int(r["gbif_key"]): self.by_name[r["name_lat"].casefold()]
+            for r in known
+            if r.get("gbif_key")
+        }
+        self.aliases: dict[str, set[int]] = {}
+        for row in names:
+            if row["lang"] == "lat":
+                self.aliases.setdefault(row["name"].casefold(), set()).add(
+                    int(row["taxon_id"])
+                )
+        self.reserved = set(self.by_id) | {int(r["id"]) for r in source if r.get("id")}
+        self.owner = {tid: key for key, tid in self.by_key.items()}
+
+    def resolve(self, key: int, canonical: str, item: dict[str, Any]) -> int:
+        latin = item["name_lat"].casefold()
+        tid = (
+            self.by_key.get(key)
+            or self.by_name.get(canonical.casefold())
+            or self.by_name.get(latin)
+        )
+        if tid is None:
+            aliases = self.aliases.get(latin, set())
+            if len(aliases) == 1:
+                tid = next(iter(aliases))
+        if item.get("id"):
+            explicit = int(item["id"])
+            if (tid is not None and explicit != tid) or (
+                tid is None and explicit in self.by_id
+            ):
+                raise ValueError(f"{canonical}: conflicting taxon id {explicit}")
+            tid = explicit
+        if tid is None:
+            # GBIF keys are stable across input order and independently generated subsets.
+            tid = key
+            if tid in self.reserved:
+                raise ValueError(
+                    f"{canonical}: GBIF key {key} is already reserved as a taxon id; "
+                    "supply an unused id in the input CSV"
+                )
+        if tid in self.owner and self.owner[tid] != key:
+            raise ValueError(
+                f"{canonical}: taxon id {tid} already belongs to GBIF {self.owner[tid]}"
+            )
+        self.owner[tid] = key
+        self.by_key[key] = tid
+        self.reserved.add(tid)
+        return tid
+
+
 def group(match: dict[str, Any], known: str | None) -> str | None:
     cls = match.get("class", "")
     if match.get("kingdom") == "Fungi":
@@ -58,16 +122,27 @@ def enrich(
     client: JsonClient,
     output: Path,
     existing_names: list[dict[str, Any]] | None = None,
+    existing_taxa: list[dict[str, Any]] | None = None,
 ) -> None:
     taxa, matches, review = [], [], []
     names: list[dict[str, Any]] = []
     # The core merges rows by ID. Reserve all curated IDs, including names
     # for taxa that are pending manual review.
-    curated = {(n["taxon_id"], n["name"]): n for n in existing_names or []}
-    next_name_id = max((n["id"] for n in curated.values()), default=0) + 1
-    by_key: dict[int, int] = {}
+    curated = {(int(n["taxon_id"]), n["name"]): n for n in existing_names or []}
+    prior_names = (
+        read_csv(output / "taxon_names.csv")
+        if (output / "taxon_names.csv").exists()
+        else []
+    )
+    name_ids = {(int(n["taxon_id"]), n["name"]): int(n["id"]) for n in prior_names}
+    name_ids.update({key: int(n["id"]) for key, n in curated.items()})
+    next_name_id = max(name_ids.values(), default=0) + 1
+    prior_taxa = read_csv(output / "taxa.csv") if (output / "taxa.csv").exists() else []
+    ids = TaxonIds(prior_taxa + (existing_taxa or []), list(curated.values()), source)
+    matched_ids: set[int] = set()
     seen: set[tuple[int, str]] = set()
-    for index, item in enumerate(source, 1):
+    # A supplied ID applies to all aliases for that GBIF key.
+    for item in sorted(source, key=lambda r: not bool(r.get("id"))):
         latin = item["name_lat"]
         match = client.get(BASE + "/match", name=latin)
         meta = {
@@ -94,15 +169,15 @@ def enrich(
         }:
             review.append(meta)
             continue
-        tid = by_key.get(key)
-        if tid is None:
-            tid = int(item.get("id") or index)
-            by_key[key] = tid
+        tid = ids.resolve(key, accepted["canonicalName"], item)
+        if tid not in matched_ids:
+            matched_ids.add(tid)
             taxa.append(
                 {
                     "id": tid,
                     "name_lat": accepted["canonicalName"],
-                    "name_ru": item.get("name_ru"),
+                    "name_ru": item.get("name_ru")
+                    or ids.by_id.get(tid, {}).get("name_ru"),
                     "rank": rank,
                     "group_ru": group_ru,
                     "gbif_key": key,
@@ -132,9 +207,9 @@ def enrich(
         for name, lang, kind in variants:
             if name and (tid, name) not in seen:
                 seen.add((tid, name))
-                old = curated.get((tid, name))
-                name_id = old["id"] if old else next_name_id
-                if not old:
+                name_id = name_ids.get((tid, name))
+                if name_id is None:
+                    name_id = next_name_id
                     next_name_id += 1
                 names.append(
                     {
@@ -146,7 +221,7 @@ def enrich(
                     }
                 )
     names.extend(
-        n for key, n in curated.items() if key not in seen and key[0] in by_key.values()
+        n for key, n in curated.items() if key not in seen and key[0] in matched_ids
     )
     names.sort(key=lambda row: row["id"])
     write_csv(output / "taxa.csv", TAXON, taxa)
@@ -164,22 +239,7 @@ def main() -> None:
     args = p.parse_args()
     known = json.loads((FIXTURES / "taxa.json").read_text(encoding="utf-8"))
     if args.input:
-        with args.input.open(encoding="utf-8-sig", newline="") as f:
-            source = list(csv.DictReader(f))
-        known_ids = {r["name_lat"].casefold(): r["id"] for r in known}
-        next_id = (
-            max(
-                [r["id"] for r in known] + [int(r["id"]) for r in source if r.get("id")]
-            )
-            + 1
-        )
-        for row in source:
-            if not row.get("id"):
-                latin = row["name_lat"].casefold()
-                if latin not in known_ids:
-                    known_ids[latin] = next_id
-                    next_id += 1
-                row["id"] = str(known_ids[latin])
+        source = read_csv(args.input)
     else:
         source = known
         write_csv(
@@ -193,7 +253,7 @@ def main() -> None:
     existing_names = json.loads(
         (FIXTURES / "taxon_names.json").read_text(encoding="utf-8")
     )
-    enrich(source, JsonClient(args.cache, 0.21), args.output, existing_names)
+    enrich(source, JsonClient(args.cache, 0.21), args.output, existing_names, known)
 
 
 if __name__ == "__main__":

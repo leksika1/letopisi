@@ -52,6 +52,36 @@ def seed_table(conn: Connection, table: str, rows: list[dict[str, Any]]) -> set[
     return set(conn.execute(query, {"rows": json.dumps(rows)}).scalars())
 
 
+def check_document_sources(conn: Connection, rows: list[dict[str, Any]]) -> None:
+    # Child fixtures refer to fixed IDs. Skipping an unrelated upload with the
+    # same ID would silently attach the book's observations to that upload.
+    conflict = (
+        conn.execute(
+            text("""
+            SELECT f.id AS fixture_id, f.filename AS fixture_file,
+                   d.id AS existing_id, d.filename AS existing_file
+            FROM jsonb_to_recordset(CAST(:rows AS jsonb))
+                AS f(id bigint, filename text, format text, year integer, sha256 text)
+            JOIN documents d ON d.id = f.id OR d.sha256 = f.sha256
+            WHERE d.id <> f.id OR CASE
+                WHEN d.sha256 IS NOT NULL AND f.sha256 IS NOT NULL THEN d.sha256 <> f.sha256
+                ELSE (d.filename, d.format, d.year) IS DISTINCT FROM (f.filename, f.format, f.year)
+            END
+            ORDER BY f.id, d.id LIMIT 1
+        """),
+            {"rows": json.dumps(rows)},
+        )
+        .mappings()
+        .first()
+    )
+    if conflict:
+        raise ValueError(
+            f"Конфликт источников: документ фикстуры {conflict['fixture_id']} "
+            f"({conflict['fixture_file']}) и документ базы {conflict['existing_id']} "
+            f"({conflict['existing_file']})."
+        )
+
+
 def load_fixtures(engine: Engine, directory: Path = FIXTURES) -> dict[str, int]:
     inserted: dict[str, int] = {}
     with engine.begin() as conn:
@@ -62,6 +92,8 @@ def load_fixtures(engine: Engine, directory: Path = FIXTURES) -> dict[str, int]:
         )
         for table, filename in TABLE_FILES:
             rows = read_rows(directory / filename)
+            if table == "documents":
+                check_document_sources(conn, rows)
             if table == "sections":
                 for row in rows:
                     row.setdefault("author_person_ids", [])
