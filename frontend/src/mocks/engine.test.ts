@@ -3,6 +3,7 @@ import { clean, filtersFromParams, parseYears, writeFilters } from '../lib/filte
 import { createDb } from './db';
 import { EXPORT_HEADERS, exportRow, observationDetail, parseQuery, patchObservation, phenology, searchObservations, suggest, toCsv } from './engine';
 import exportColumns from '@contracts/export_columns.json';
+import { highlightBoxes } from '../components/SourceView';
 
 describe('приёмочные запросы (saved_queries.json) на фикстурах', () => {
   const db = createDb();
@@ -131,3 +132,20 @@ describe('фильтры ↔ URL', () => {
   });
 });
 
+describe('подсветка: bboxes или chunk.lines (v1.1)', () => {
+  const lines = [
+    { text: 'a', start: 0, end: 10, bbox: [0.1, 0.1, 0.5, 0.12] },
+    { text: 'b', start: 11, end: 20, bbox: [0.1, 0.13, 0.5, 0.15] },
+    { text: 'c', start: 21, end: 30, bbox: [0.1, 0.16, 0.5, 0.18] },
+  ];
+  it('свои bboxes записи важнее строк', () => {
+    expect(highlightBoxes({ bboxes: [[0, 0, 1, 1]], quote_span: [0, 5] }, { lines }).boxes).toEqual([[0, 0, 1, 1]]);
+  });
+  it('без bboxes — строки, пересекающие quote_span', () => {
+    expect(highlightBoxes({ bboxes: [], quote_span: [12, 25] }, { lines })).toEqual({ boxes: [lines[1]!.bbox, lines[2]!.bbox], fromLines: true });
+  });
+  it('нет lines / quote_span — пусто', () => {
+    expect(highlightBoxes({ bboxes: [], quote_span: null }, { lines }).boxes).toEqual([]);
+    expect(highlightBoxes({ bboxes: [], quote_span: [0, 3] }, { lines: null }).boxes).toEqual([]);
+  });
+});

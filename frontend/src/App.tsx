@@ -1,9 +1,17 @@
 import { NavLink, Route, Routes } from 'react-router-dom';
 import { useEditorName } from './lib/editor';
 import SearchPage from './pages/SearchPage';
+import ReviewPage from './pages/ReviewPage';
+import SavedQueriesPage from './pages/SavedQueriesPage';
+import DocumentsPage from './pages/DocumentsPage';
+import QualityPage from './pages/QualityPage';
 
 const NAV = [
   { to: '/', label: 'Поиск', end: true },
+  { to: '/review', label: 'На проверку' },
+  { to: '/saved', label: 'Сохранённые запросы' },
+  { to: '/documents', label: 'Документы' },
+  { to: '/quality', label: 'Качество' },
 ];
 
 export default function App() {
@@ -49,6 +57,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<SearchPage />} />
           <Route path="/observations/:id" element={<SearchPage />} />
+          <Route path="/review" element={<ReviewPage />} />
+          <Route path="/saved" element={<SavedQueriesPage />} />
+          <Route path="/documents" element={<DocumentsPage />} />
+          <Route path="/quality" element={<QualityPage />} />
           <Route path="*" element={<p className="text-stone-500">Страница не найдена.</p>} />
         </Routes>
       </main>
