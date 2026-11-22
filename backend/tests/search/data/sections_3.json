@@ -1,0 +1,398 @@
+[
+ {
+  "id": 30001,
+  "document_id": 3,
+  "parent_id": null,
+  "code": null,
+  "title": "Введение",
+  "pdf_page_from": 5,
+  "pdf_page_to": 6
+ },
+ {
+  "id": 30002,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "1",
+  "title": "Территория",
+  "pdf_page_from": 7,
+  "pdf_page_to": 8
+ },
+ {
+  "id": 30003,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "2",
+  "title": "Пробные и учетные площади, ключевые участки, постоянные (временные) маршруты",
+  "pdf_page_from": 9,
+  "pdf_page_to": 9
+ },
+ {
+  "id": 30004,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "3",
+  "title": "Ландшафты и почвы",
+  "pdf_page_from": 10,
+  "pdf_page_to": 10
+ },
+ {
+  "id": 30005,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "4",
+  "title": "Погода",
+  "pdf_page_from": 11,
+  "pdf_page_to": 40
+ },
+ {
+  "id": 30006,
+  "document_id": 3,
+  "parent_id": 30005,
+  "code": "4.1",
+  "title": "Изменение климата",
+  "pdf_page_from": 11,
+  "pdf_page_to": 12
+ },
+ {
+  "id": 30007,
+  "document_id": 3,
+  "parent_id": 30005,
+  "code": "4.2",
+  "title": "Даты начала сезонов, продолжительность, температура воздуха",
+  "pdf_page_from": 12,
+  "pdf_page_to": 35
+ },
+ {
+  "id": 30008,
+  "document_id": 3,
+  "parent_id": 30005,
+  "code": "4.3",
+  "title": "Осадки и влажность",
+  "pdf_page_from": 36,
+  "pdf_page_to": 39
+ },
+ {
+  "id": 30009,
+  "document_id": 3,
+  "parent_id": 30005,
+  "code": "4.4",
+  "title": "Ветер",
+  "pdf_page_from": 39,
+  "pdf_page_to": 40
+ },
+ {
+  "id": 30010,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "5",
+  "title": "Воды",
+  "pdf_page_from": 41,
+  "pdf_page_to": 45
+ },
+ {
+  "id": 30011,
+  "document_id": 3,
+  "parent_id": 30010,
+  "code": "5.1",
+  "title": "Сезонная динамика водоемов бассейна р. Паз",
+  "pdf_page_from": 41,
+  "pdf_page_to": 42
+ },
+ {
+  "id": 30012,
+  "document_id": 3,
+  "parent_id": 30010,
+  "code": "5.2",
+  "title": "Гидротехнический мониторинг в бассейне р. Паз",
+  "pdf_page_from": 42,
+  "pdf_page_to": 45
+ },
+ {
+  "id": 30013,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "6",
+  "title": "Календарь природы",
+  "pdf_page_from": 46,
+  "pdf_page_to": 49
+ },
+ {
+  "id": 30014,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "7",
+  "title": "Флора и растительность",
+  "pdf_page_from": 50,
+  "pdf_page_to": 94
+ },
+ {
+  "id": 30015,
+  "document_id": 3,
+  "parent_id": 30014,
+  "code": "7.1",
+  "title": "Флористические исследования, новые виды заповедника «Пасвик»",
+  "pdf_page_from": 50,
+  "pdf_page_to": 51
+ },
+ {
+  "id": 30016,
+  "document_id": 3,
+  "parent_id": 30014,
+  "code": "7.2",
+  "title": "Геоботанические исследования",
+  "pdf_page_from": 51,
+  "pdf_page_to": 68
+ },
+ {
+  "id": 30017,
+  "document_id": 3,
+  "parent_id": 30014,
+  "code": "7.3",
+  "title": "Сезонная динамика растительных сообществ",
+  "pdf_page_from": 69,
+  "pdf_page_to": 78
+ },
+ {
+  "id": 30018,
+  "document_id": 3,
+  "parent_id": 30014,
+  "code": "7.4",
+  "title": "Плодоношение и семеношение древесных растений",
+  "pdf_page_from": 79,
+  "pdf_page_to": 80
+ },
+ {
+  "id": 30019,
+  "document_id": 3,
+  "parent_id": 30014,
+  "code": "7.5",
+  "title": "Продуктивность ягодников",
+  "pdf_page_from": 81,
+  "pdf_page_to": 87
+ },
+ {
+  "id": 30020,
+  "document_id": 3,
+  "parent_id": 30014,
+  "code": "7.6",
+  "title": "Учет урожайности грибов",
+  "pdf_page_from": 88,
+  "pdf_page_to": 94
+ },
+ {
+  "id": 30021,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "8",
+  "title": "Фауна и животный мир",
+  "pdf_page_from": 95,
+  "pdf_page_to": 520
+ },
+ {
+  "id": 30022,
+  "document_id": 3,
+  "parent_id": 30021,
+  "code": "8.1",
+  "title": "Беспозвоночные",
+  "pdf_page_from": 95,
+  "pdf_page_to": 121
+ },
+ {
+  "id": 30023,
+  "document_id": 3,
+  "parent_id": 30021,
+  "code": "8.2",
+  "title": "Рыбы",
+  "pdf_page_from": 122,
+  "pdf_page_to": 140
+ },
+ {
+  "id": 30024,
+  "document_id": 3,
+  "parent_id": 30021,
+  "code": "8.3",
+  "title": "Амфибии и рептилии",
+  "pdf_page_from": 141,
+  "pdf_page_to": 142
+ },
+ {
+  "id": 30025,
+  "document_id": 3,
+  "parent_id": 30021,
+  "code": "8.4",
+  "title": "Птицы",
+  "pdf_page_from": 143,
+  "pdf_page_to": 448
+ },
+ {
+  "id": 30026,
+  "document_id": 3,
+  "parent_id": 30021,
+  "code": "8.5",
+  "title": "Млекопитающие",
+  "pdf_page_from": 449,
+  "pdf_page_to": 520
+ },
+ {
+  "id": 30027,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "9",
+  "title": "Состояние заповедного режима и влияние антропогенных факторов на природу заповедника",
+  "pdf_page_from": 521,
+  "pdf_page_to": 522
+ },
+ {
+  "id": 30028,
+  "document_id": 3,
+  "parent_id": 30027,
+  "code": "9.1",
+  "title": "Состояние заповедного режима",
+  "pdf_page_from": 521,
+  "pdf_page_to": 521
+ },
+ {
+  "id": 30029,
+  "document_id": 3,
+  "parent_id": 30027,
+  "code": "9.2",
+  "title": "Мониторинг воздействия антропогенных факторов на природные комплексы заповедника и окрестностей",
+  "pdf_page_from": 521,
+  "pdf_page_to": 522
+ },
+ {
+  "id": 30030,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "10",
+  "title": "Научные исследования",
+  "pdf_page_from": 523,
+  "pdf_page_to": 550
+ },
+ {
+  "id": 30031,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "11",
+  "title": "Эколого-просветительская работа",
+  "pdf_page_from": 551,
+  "pdf_page_to": 560
+ },
+ {
+  "id": 30032,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "12",
+  "title": "Охрана историко-культурного наследия",
+  "pdf_page_from": 561,
+  "pdf_page_to": 592
+ },
+ {
+  "id": 30033,
+  "document_id": 3,
+  "parent_id": null,
+  "code": "13",
+  "title": "Международное сотрудничество",
+  "pdf_page_from": 593,
+  "pdf_page_to": 599
+ },
+ {
+  "id": 30034,
+  "document_id": 3,
+  "parent_id": null,
+  "code": null,
+  "title": "Библиографический список",
+  "pdf_page_from": 600,
+  "pdf_page_to": 610
+ },
+ {
+  "id": 30035,
+  "document_id": 3,
+  "parent_id": null,
+  "code": null,
+  "title": "Приложения",
+  "pdf_page_from": 611,
+  "pdf_page_to": 732
+ },
+ {
+  "id": 30036,
+  "document_id": 3,
+  "parent_id": 30022,
+  "code": null,
+  "title": "1. ОБСЛЕДОВАНИЕ СОСТОЯНИЯ РЕК И РУЧЬЕВ В ДОЛИНЕ РЕКИ ПАЗ",
+  "pdf_page_from": 101,
+  "pdf_page_to": 121
+ },
+ {
+  "id": 30037,
+  "document_id": 3,
+  "parent_id": 30023,
+  "code": null,
+  "title": "МОНИТОРИНГ ЛОСОСЕВЫХ РЫБ РЕКИ ПАЗ КАК БИОЛОГИЧЕСКОГО РЕСУРСА КРАЙНЕГО СЕВЕРА 1. НАУЧНО-ИССЛЕДОВАТЕЛЬСКИЕ РАБОТЫ ПО ИЗУЧЕНИЮ ГЕНЕТИЧЕСКОГО РАЗНООБРАЗИЯ ЛОСОСЕВЫХ РЫБ РЕКИ ПАЗ",
+  "pdf_page_from": 123,
+  "pdf_page_to": 140
+ },
+ {
+  "id": 30038,
+  "document_id": 3,
+  "parent_id": 30025,
+  "code": null,
+  "title": "4. Аннотированный список видов птиц заповедника Пасвик и его окрестностей",
+  "pdf_page_from": 245,
+  "pdf_page_to": 276
+ },
+ {
+  "id": 30039,
+  "document_id": 3,
+  "parent_id": 30025,
+  "code": null,
+  "title": "2. ОРНИТОФАУНА ДОЛИНЫ РЕКИ ВОРЬЕМА, ЭКОЛОГИЧЕСКИЕ ГРУППЫ ПТИЦ, ОЦЕНКА СОСТОЯНИЯ ПОПУЛЯЦИЙ ПТИЦ",
+  "pdf_page_from": 277,
+  "pdf_page_to": 289
+ },
+ {
+  "id": 30040,
+  "document_id": 3,
+  "parent_id": 30025,
+  "code": null,
+  "title": "3. ОСЕННИЕ ОРНИТОЛОГИЧЕСКИЕ ИССЛЕДОВАНИЯ НА ТЕРРИТОРИИ ЗАПОВЕДНИКА «ПАСВИК», ПРИЛЕГАЮЩЕЙ ТЕРРИТОРИИ ПЕЧЕНГСКОГО РАЙОНА И НА ОТДЕЛЬНЫХ ТЕРРИТОРИЯХ КАНДАЛАШСКОГО РАЙОНА МУРМАНСКОЙ ОБЛАСТИ В 2020 ГОДУ",
+  "pdf_page_from": 290,
+  "pdf_page_to": 318
+ },
+ {
+  "id": 30041,
+  "document_id": 3,
+  "parent_id": 30025,
+  "code": null,
+  "title": "4. КАРТОГРАФИРОВАНИЕ МЕСТ ОБИТАНИЯ ВОДОПЛАВАЮЩИХ И ОКОЛОВОДНЫХ ПТИЦ В ДОЛИНАХ РЕК ПАЗ И ВОРЬЕМА, ОЦЕНКА СОСТОЯНИЯ ИХ ПОПУЛЯЦИЙ»",
+  "pdf_page_from": 319,
+  "pdf_page_to": 448
+ },
+ {
+  "id": 30042,
+  "document_id": 3,
+  "parent_id": 30026,
+  "code": null,
+  "title": "1. ОСОБЕННОСТИ ЭКОЛОГИИ МЕЛКИХ МЛЕКОПИТАЮЩИХ",
+  "pdf_page_from": 449,
+  "pdf_page_to": 469
+ },
+ {
+  "id": 30043,
+  "document_id": 3,
+  "parent_id": 30026,
+  "code": null,
+  "title": "2. ОСОБЕННОСТИ ЭКОЛОГИИ СРЕДНИХ И КРУПНЫХ МЛЕКОПИТАЮЩИХ Видовые очерки, наблюдения и исследования",
+  "pdf_page_from": 469,
+  "pdf_page_to": 503
+ },
+ {
+  "id": 30044,
+  "document_id": 3,
+  "parent_id": 30026,
+  "code": null,
+  "title": "3. ЧИСЛЕННОСТЬ ОХОТНИЧЬИХ ВИДОВ ЖИВОТНЫХ В 2020 (РЕЗУЛЬТАТЫ ЗМУ)",
+  "pdf_page_from": 503,
+  "pdf_page_to": 520
+ }
+]
