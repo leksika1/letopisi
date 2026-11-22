@@ -6,9 +6,13 @@ import { useCreateSavedQuery, useObservations } from '../api/hooks';
 import type { SavedQuery, SearchFilters } from '../api/types';
 import FilterChips from '../components/FilterChips';
 import FilterPanel, { ALL_FIELDS, type FieldName } from '../components/FilterPanel';
+import ObservationPanel from '../components/ObservationPanel';
+import PhenologyGrid from '../components/PhenologyGrid';
+import PlaceMap from '../components/PlaceMap';
 import QueryBar from '../components/QueryBar';
 import ResultsTable from '../components/ResultsTable';
 import type { FilterKey } from '../lib/filters';
+import { useLabels } from '../lib/labelCache';
 import { useUrlFilters } from '../lib/useUrlFilters';
 
 /** 4 приёмочных запроса жюри (лист «примеры запросов» → contracts/fixtures/saved_queries.json). */
@@ -40,6 +44,7 @@ export default function SearchPage() {
   const { filters, setFilters, patch, page, setParam, update, searchParams } = useUrlFilters();
   const params = useParams();
   const navigate = useNavigate();
+  const labels = useLabels();
   const tab = (TABS.find((t) => t.id === searchParams.get('tab'))?.id ?? 'all') as Tab;
   const tabDef = TABS.find((t) => t.id === tab) ?? TABS[0]!;
   const pageSize = PAGE_SIZES.includes(Number(searchParams.get('page_size'))) ? Number(searchParams.get('page_size')) : 50;
@@ -53,10 +58,15 @@ export default function SearchPage() {
   const { data, isFetching, isError, error } = useObservations(filters, page, pageSize);
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.page_size)) : 1;
 
-  // карточка записи появится в V-2; пока строка только выделяется (obs в URL)
   const openRecord = useCallback((id: number) => {
     const sp = new URLSearchParams(searchParams);
     sp.set('obs', String(id));
+    navigate({ pathname: '/', search: sp.toString() });
+  }, [navigate, searchParams]);
+
+  const closeRecord = useCallback(() => {
+    const sp = new URLSearchParams(searchParams);
+    sp.delete('obs');
     navigate({ pathname: '/', search: sp.toString() });
   }, [navigate, searchParams]);
 
@@ -91,7 +101,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="grid gap-4">
+    <div className={`grid gap-4 ${selectedId ? 'xl:grid-cols-[minmax(0,1fr)_minmax(28rem,40%)]' : ''}`}>
       <div className="min-w-0 space-y-4">
         <section className="card space-y-3 p-4">
           <QueryBar
@@ -126,6 +136,24 @@ export default function SearchPage() {
           </div>
           <p className="mb-3 text-sm text-stone-500">{tabDef.hint}</p>
           <FilterPanel filters={filters} patch={patch} fields={tabDef.fields} />
+          {tab === 'phenology' && (
+            <div className="mt-4 border-t border-stone-100 pt-3">
+              <h3 className="mb-2 text-base">Фенофазы по годам</h3>
+              <PhenologyGrid taxonId={filters.taxon_id} phenophaseId={filters.phenophase_id} years={filters.years} onOpen={openRecord} />
+              {!filters.taxon_id && filters.taxon && (
+                <p className="mt-1 text-xs text-stone-500">Для таблицы фенофаз выберите вид из подсказок (нужен taxon_id).</p>
+              )}
+            </div>
+          )}
+          {tab === 'place' && (
+            <div className="mt-4 border-t border-stone-100 pt-3">
+              <PlaceMap
+                filters={filters}
+                year={filters.years?.length === 1 ? filters.years[0] : undefined}
+                onPickTaxon={(id, label) => { labels.put('taxon', id, label); patch({ taxon_id: id, taxon: undefined }); }}
+              />
+            </div>
+          )}
         </section>
 
         <section className="card p-4">
@@ -185,6 +213,11 @@ export default function SearchPage() {
         </section>
       </div>
 
+      {selectedId && (
+        <div className="xl:sticky xl:top-4 xl:h-[calc(100vh-2rem)]">
+          <ObservationPanel id={selectedId} onClose={closeRecord} />
+        </div>
+      )}
     </div>
   );
 }
