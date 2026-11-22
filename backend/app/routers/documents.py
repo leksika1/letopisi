@@ -22,6 +22,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy import Connection, text
 
 from pipeline.ingest import jobs
+from pipeline.ingest.pdf import catalog_book, has_text_layer, is_spread_scan
 
 from ..db import ROOT
 
@@ -67,18 +68,25 @@ def list_documents(request: Request) -> list[dict[str, Any]]:
         )
 
 
-def inspect_file(path: Path, fmt: str) -> tuple[int | None, bool, str | None]:
+def inspect_file(
+    path: Path, fmt: str, filename: str | None = None
+) -> tuple[int | None, bool, str | None]:
     if fmt == "pdf":
         try:
             with pymupdf.open(path) as doc:
                 if not doc.is_pdf or not doc.page_count or doc.needs_pass:
                     raise ValueError
-                first = doc[0]
-                return (
-                    doc.page_count,
-                    len(first.get_text().strip()) >= 50,
-                    ("spread" if first.rect.width > first.rect.height else "single"),
-                )
+                catalog_layout = catalog_book(filename or path.name).get("layout")
+                spread = catalog_layout == "spread"
+                layer = False
+                for page in doc:
+                    if has_text_layer(page):
+                        layer = True
+                    elif is_spread_scan(page, catalog_layout):
+                        spread = True
+                    if layer and (spread or catalog_layout == "single"):
+                        break
+                return doc.page_count, layer, "spread" if spread else "single"
         except (RuntimeError, ValueError) as exc:
             raise HTTPException(415, "Файл не является доступным PDF") from exc
     member = {"docx": "word/document.xml", "xlsx": "xl/workbook.xml"}[fmt]
@@ -121,7 +129,7 @@ def upload(
                 stream.write(block)
                 digest.update(block)
         checksum = digest.hexdigest()
-        pages, layer, layout = inspect_file(stage, fmt)
+        pages, layer, layout = inspect_file(stage, fmt, name)
         with request.app.state.engine.begin() as conn:
             conn.execute(
                 text("SELECT pg_advisory_xact_lock(hashtextextended(:sha,0))"),
@@ -168,7 +176,10 @@ def get_file(id: Id, request: Request) -> FileResponse:
     with request.app.state.engine.connect() as conn:
         doc = document(conn, id)
     return FileResponse(
-        original(doc), media_type=MIME[doc["format"]], filename=doc["filename"]
+        original(doc),
+        media_type=MIME[doc["format"]],
+        filename=doc["filename"],
+        content_disposition_type="inline" if doc["format"] == "pdf" else "attachment",
     )
 
 

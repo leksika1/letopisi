@@ -53,33 +53,19 @@ done
 python3 -m pipeline.devtools.build_stand_bundle --out data/stand_bundle
 
 echo "== 4/6 Книги (PDF)"
-if [[ -f $ZIP ]]; then
-    python3 - "$ZIP" <<'PY'
-import sys, zipfile
-names = {"1995": "book02_1995.pdf", "1996": "book03_1996.pdf", "2020": "book27_2020.pdf"}
-z = zipfile.ZipFile(sys.argv[1])
-for info in z.infolist():
-    if not info.filename.lower().endswith(".pdf"):
-        continue
-    for year, target in names.items():
-        if year in info.filename:
-            with open(f"data/raw/{target}", "wb") as out:
-                out.write(z.read(info))
-            print("  ", target)
-PY
-else
-    echo "  $ZIP не найден — сервис поднимется без страниц-источников (их можно добавить позже)"
-fi
+originals=$(python3 infra/import_originals.py "$ZIP")
 
 echo "== 5/6 Сборка и запуск (несколько минут при первом запуске)"
 cd infra
 "${DOCKER[@]}" compose up -d --build --wait
 
 echo "== 6/6 Загрузка данных"
-"${DOCKER[@]}" compose cp ../data/stand_bundle backend:/app/data/stand_bundle
-for f in ../data/raw/*.pdf; do
-    [[ -f $f ]] && "${DOCKER[@]}" compose cp "$f" backend:/app/data/raw/
-done
+"${DOCKER[@]}" compose cp ../data/stand_bundle backend:/app/data/
+while IFS= read -r name; do
+    if [[ -n $name ]]; then
+        "${DOCKER[@]}" compose cp "../data/raw/$name" backend:/app/data/raw/
+    fi
+done <<< "$originals"
 "${DOCKER[@]}" compose exec -T backend python pipeline/load.py /app/data/stand_bundle
 curl -fsS http://127.0.0.1:8000/api/health && echo
 IP=$(curl -fsS -H 'Metadata-Flavor: Google' http://169.254.169.254/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip 2>/dev/null || true)
