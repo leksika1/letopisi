@@ -16,6 +16,12 @@ if ! command -v docker >/dev/null 2>&1 || ! docker compose version >/dev/null 2>
     sudo apt-get install -y docker.io docker-compose-v2 python3 curl openssl
     sudo usermod -aG docker "$USER" || true
 fi
+# Docker Hub из российских облаков часто недоступен — тянем образы через зеркала.
+if [[ ! -f /etc/docker/daemon.json ]]; then
+    echo '{"registry-mirrors": ["https://mirror.gcr.io", "https://dockerhub.timeweb.cloud"]}' \
+        | sudo tee /etc/docker/daemon.json >/dev/null
+    sudo systemctl restart docker
+fi
 DOCKER=(docker)
 docker info >/dev/null 2>&1 || DOCKER=(sudo docker)
 
