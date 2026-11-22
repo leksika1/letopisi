@@ -1,0 +1,38 @@
+name,lat,lon,source,found,id,coords_source
+Паз,69.2394029,29.3145417,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/relation/2864884",True,1,gazetteer
+Пасвик,,,,False,2,
+Варлама,,,,False,3,
+Калкупя,69.2929036,29.3336433,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/node/12313427573",True,4,gazetteer
+Раякоски,69.0211870,29.0044500,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/way/255651625",True,5,gazetteer
+Янискоски,68.9696810,28.7804760,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/node/1158193717",True,6,gazetteer
+Кайтакоски,,,,False,7,
+Наутси,,,,False,8,
+Наутсийоки,68.9389448,28.9677354,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/way/100200688",True,9,gazetteer
+Каскама,69.2786726,29.4791444,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/node/12313427509",True,10,gazetteer
+Ворьема,,,,False,11,
+Мениккайоки,,,,False,12,
+Каскамаярви,69.2757876,29.4382379,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/way/100199929",True,13,gazetteer
+Боссояврре,,,,False,14,
+Кайтоярви,68.9521322,28.8310548,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/relation/9866691",True,15,gazetteer
+Куэтсъярви,69.4355757,30.1529493,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/relation/1401675",True,16,gazetteer
+Валькеаярви,,,,False,17,
+Хеюхенъярви,69.1755658,29.2915774,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/relation/15304876",True,18,gazetteer
+Сальмиярви,,,,False,19,
+Шуонийоки,69.3176882,30.1070553,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/way/149781355",True,20,gazetteer
+Колоссйоки,,,,False,21,
+Каскамайоки,,,,False,22,
+Лауккуярви,69.2656142,29.5968361,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/way/100534722",True,23,gazetteer
+Лауккуйоки,69.2178122,29.6168241,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/way/100199824",True,24,gazetteer
+Нилийоки,,,,False,25,
+Нилиярви,69.2391620,29.4101480,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/way/100199893",True,26,gazetteer
+Воуватусъярви,,,,False,27,
+Каттоламполо,,,,False,28,
+Кораблекк,69.2393922,29.5109939,"OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/node/6651750734",True,29,gazetteer
+Латвала,,,,False,30,
+Мениккасаари,,,,False,31,
+Кайтоапа,,,,False,32,
+Кувернеринйоки,,,,False,33,
+Заполярный,69.42,30.8,,False,34,manual_approx
+Никель,69.41,30.22,,False,35,manual_approx
+Борисоглебский,,,,False,36,
+Йорданфосс,,,,False,37,

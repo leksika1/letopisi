@@ -1,0 +1,47 @@
+name: Backend and pipeline
+on: [pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-retries 15
+    env:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@127.0.0.1:5432/postgres
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+      LLM_BACKEND: mock
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r backend/requirements-dev.txt -r pipeline/ingest/requirements.txt
+      - run: python -m ruff check --select F backend pipeline
+      - run: python -m ruff check --extend-exclude 'backend/app/search,backend/app/routers/search.py,backend/tests/search' backend pipeline/load.py pipeline/ingest dictionaries/scripts
+      - run: python -m pytest -q backend/tests pipeline/tests pipeline/ingest/tests dictionaries/scripts/tests
+  compose:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose up -d --build --wait
+      - run: |
+          docker compose exec -T backend python pipeline/load.py
+          docker compose exec -T backend python pipeline/load.py
+          curl -fsS http://localhost:8000/
+          curl -fsS http://localhost:8000/api/health | jq -e '.db == true'
+          curl -fsS 'http://localhost:8000/api/observations?page_size=1' | jq -e '.total > 0'
+      - if: failure()
+        run: docker compose logs --tail 100
+      - if: always()
+        run: docker compose down

@@ -1,0 +1,32 @@
+id,name_lat,name_ru,rank,genus,family,order,class,group_ru,gbif_key
+1,Salix caprea,Ива козья,species,Salix,Salicaceae,Malpighiales,Magnoliopsida,сосудистые растения,5372952
+2,Tussilago farfara,Мать-и-мачеха,species,Tussilago,Asteraceae,Asterales,Magnoliopsida,сосудистые растения,3149879
+3,Betula nana,Береза карликовая,species,Betula,Betulaceae,Fagales,Magnoliopsida,сосудистые растения,5332004
+4,Betula pubescens,Береза пушистая,species,Betula,Betulaceae,Fagales,Magnoliopsida,сосудистые растения,9118014
+5,Pinus sylvestris,Сосна обыкновенная,species,Pinus,Pinaceae,Pinales,Pinopsida,сосудистые растения,5285637
+6,Rubus chamaemorus,Морошка,species,Rubus,Rosaceae,Rosales,Magnoliopsida,сосудистые растения,2998290
+7,Vaccinium myrtillus,Черника,species,Vaccinium,Ericaceae,Ericales,Magnoliopsida,сосудистые растения,2882833
+8,Vaccinium vitis-idaea,Брусника,species,Vaccinium,Ericaceae,Ericales,Magnoliopsida,сосудистые растения,2882835
+9,Vaccinium uliginosum,Голубика,species,Vaccinium,Ericaceae,Ericales,Magnoliopsida,сосудистые растения,8073364
+10,Empetrum hermaphroditum,Водяника обоеполая,species,Empetrum,Ericaceae,Ericales,Magnoliopsida,сосудистые растения,6387994
+11,Rhododendron tomentosum,Багульник болотный,species,Rhododendron,Ericaceae,Ericales,Magnoliopsida,сосудистые растения,6400569
+12,Cornus suecica,Дерен шведский,species,Cornus,Cornaceae,Cornales,Magnoliopsida,сосудистые растения,3082246
+13,Geranium sylvaticum,Герань лесная,species,Geranium,Geraniaceae,Geraniales,Magnoliopsida,сосудистые растения,2891147
+14,Trollius europaeus,Купальница европейская,species,Trollius,Ranunculaceae,Ranunculales,Magnoliopsida,сосудистые растения,3033289
+15,Eriophorum vaginatum,Пушица влагалищная,species,Eriophorum,Cyperaceae,Poales,Liliopsida,сосудистые растения,2730185
+16,Alces alces,Лось,species,Alces,Cervidae,Artiodactyla,Mammalia,млекопитающие,2440940
+17,Ursus arctos,Бурый медведь,species,Ursus,Ursidae,Carnivora,Mammalia,млекопитающие,2433433
+18,Lepus timidus,Заяц-беляк,species,Lepus,Leporidae,Lagomorpha,Mammalia,млекопитающие,2436756
+19,Vulpes vulpes,Обыкновенная лисица,species,Vulpes,Canidae,Carnivora,Mammalia,млекопитающие,5219243
+20,Mustela erminea,Горностай,species,Mustela,Mustelidae,Carnivora,Mammalia,млекопитающие,5219019
+22,Martes martes,Лесная куница,species,Martes,Mustelidae,Carnivora,Mammalia,млекопитающие,5218878
+23,Gulo gulo,Росомаха,species,Gulo,Mustelidae,Carnivora,Mammalia,млекопитающие,5219073
+24,Sciurus vulgaris,Обыкновенная белка,species,Sciurus,Sciuridae,Rodentia,Mammalia,млекопитающие,8211070
+25,Rangifer tarandus,Северный олень,species,Rangifer,Cervidae,Artiodactyla,Mammalia,млекопитающие,5220114
+26,Cygnus cygnus,Лебедь-кликун,species,Cygnus,Anatidae,Anseriformes,Aves,птицы,2498347
+27,Bucephala clangula,Гоголь,species,Bucephala,Anatidae,Anseriformes,Aves,птицы,2498326
+28,Lagopus lagopus,Белая куропатка,species,Lagopus,Phasianidae,Galliformes,Aves,птицы,2473421
+29,Tetrao urogallus,Глухарь,species,Tetrao,Phasianidae,Galliformes,Aves,птицы,2473577
+30,Cuculus canorus,Обыкновенная кукушка,species,Cuculus,Cuculidae,Cuculiformes,Aves,птицы,5231918
+31,Parus major,Большая синица,species,Parus,Paridae,Passeriformes,Aves,птицы,9705453
+32,Plectrophenax nivalis,Пуночка,species,Plectrophenax,Calcariidae,Passeriformes,Aves,птицы,2491719

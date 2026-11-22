@@ -1,0 +1,33 @@
+id,name_ru,name_lat,group_ru
+1,Ива козья,Salix caprea,сосудистые растения
+2,Мать-и-мачеха,Tussilago farfara,сосудистые растения
+3,Береза карликовая,Betula nana,сосудистые растения
+4,Береза пушистая,Betula pubescens,сосудистые растения
+5,Сосна обыкновенная,Pinus sylvestris,сосудистые растения
+6,Морошка,Rubus chamaemorus,сосудистые растения
+7,Черника,Vaccinium myrtillus,сосудистые растения
+8,Брусника,Vaccinium vitis-idaea,сосудистые растения
+9,Голубика,Vaccinium uliginosum,сосудистые растения
+10,Водяника обоеполая,Empetrum hermaphroditum,сосудистые растения
+11,Багульник болотный,Rhododendron tomentosum,сосудистые растения
+12,Дерен шведский,Cornus suecica,сосудистые растения
+13,Герань лесная,Geranium sylvaticum,сосудистые растения
+14,Купальница европейская,Trollius europaeus,сосудистые растения
+15,Пушица влагалищная,Eriophorum vaginatum,сосудистые растения
+16,Лось,Alces alces,млекопитающие
+17,Бурый медведь,Ursus arctos,млекопитающие
+18,Заяц-беляк,Lepus timidus,млекопитающие
+19,Обыкновенная лисица,Vulpes vulpes,млекопитающие
+20,Горностай,Mustela erminea,млекопитающие
+21,Американская норка,Neogale vison,млекопитающие
+22,Лесная куница,Martes martes,млекопитающие
+23,Росомаха,Gulo gulo,млекопитающие
+24,Обыкновенная белка,Sciurus vulgaris,млекопитающие
+25,Северный олень,Rangifer tarandus,млекопитающие
+26,Лебедь-кликун,Cygnus cygnus,птицы
+27,Гоголь,Bucephala clangula,птицы
+28,Белая куропатка,Lagopus lagopus,птицы
+29,Глухарь,Tetrao urogallus,птицы
+30,Обыкновенная кукушка,Cuculus canorus,птицы
+31,Большая синица,Parus major,птицы
+32,Пуночка,Plectrophenax nivalis,птицы
