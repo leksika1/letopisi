@@ -3,6 +3,7 @@ import json
 from collections.abc import Iterator
 from io import BytesIO, StringIO
 from pathlib import Path
+from typing import Any
 from unittest.mock import Mock
 
 import pymupdf
@@ -16,9 +17,11 @@ from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 from sqlalchemy import Engine
 
+from backend.app import jobs
 from backend.app.db import ROOT
 from backend.app.main import app
-from pipeline.ingest import jobs
+from pipeline.ingest import pdf as pdf_ingest
+from pipeline.ingest.common import Stats
 from pipeline.load import load_fixtures
 
 SPEC = yaml.safe_load((ROOT / "contracts/openapi.yaml").read_text(encoding="utf-8"))
@@ -66,6 +69,9 @@ def client(
     database: Engine, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> Iterator[TestClient]:
     monkeypatch.setenv("DATA_DIR", str(tmp_path / "data"))
+    monkeypatch.setenv("LLM_BACKEND", "mock")
+    monkeypatch.setenv("YC_API_KEY", "")
+    monkeypatch.setenv("YC_FOLDER_ID", "")
     load_fixtures(database)
     with TestClient(app) as http:
         yield http
@@ -145,6 +151,78 @@ def test_office_original(client: TestClient, ext: str) -> None:
     check(client.get(url + "/pages/1.png"), "/documents/{id}/pages/{n}.png", "get", 404)
 
 
+def test_uploaded_pdf_with_scanned_cover(client: TestClient) -> None:
+    with pymupdf.open() as pdf:
+        pdf.new_page()
+        pdf.new_page().insert_text(
+            (30, 50),
+            "A page of digital text with observations from the nature reserve.",
+        )
+        content = pdf.tobytes()
+    response = client.post(
+        "/api/documents",
+        files={"file": ("mixed.pdf", content)},
+        data={"title": "Книга", "year": "2020"},
+    )
+    check(response, "/documents", "post", 201)
+    assert response.json()["pages"] == 2 and response.json()["has_text_layer"] is True
+
+
+@pytest.mark.parametrize(
+    "name,orientation,has_text,layout,halves",
+    [
+        ("mixed.pdf", "landscape", False, "spread", ["L", "R"]),
+        ("text.pdf", "landscape", True, "single", [None]),
+        ("receipt.pdf", "rotated", False, "single", [None]),
+        ("Book27_2020.pdf", "landscape", False, "single", [None]),
+    ],
+)
+def test_upload_layout_matches_ingestion(
+    client: TestClient,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    name: str,
+    orientation: str,
+    has_text: bool,
+    layout: str,
+    halves: list[str | None],
+) -> None:
+    path = tmp_path / name
+    with pymupdf.open() as doc:
+        doc.new_page(width=120, height=240)
+        if orientation == "rotated":
+            page = doc.new_page(width=120, height=240)
+            page.set_rotation(90)
+        else:
+            page = doc.new_page(width=240, height=120)
+        if has_text:
+            page.insert_text(
+                (10, 20),
+                "A digitally typeset record from a landscape page containing enough text.",
+                fontsize=5,
+            )
+        doc.save(path)
+    response = client.post(
+        "/api/documents",
+        files={"file": (name, path.read_bytes(), "application/pdf")},
+        data={"year": "2020", "title": "Книга"},
+    )
+    check(response, "/documents", "post", 201)
+    assert response.json()["layout"] == layout
+    assert response.json()["has_text_layer"] is has_text
+
+    box = {"vertices": [{"x": 1, "y": 1}, {"x": 10, "y": 10}]}
+    line = {"text": "sample", "boundingBox": box}
+    annotation = {"textAnnotation": {"blocks": [{"lines": [line]}]}}
+    monkeypatch.setattr(pdf_ingest.ocr, "recognize", Mock(return_value=annotation))
+    fragments = pdf_ingest.fragments(
+        path, tmp_path / "pages", tmp_path / "cache", Stats()
+    )
+    assert [
+        f.locator.get("half") for f in fragments if f.locator["pdf_page"] == 2
+    ] == halves
+
+
 def test_edit_history_and_rollback(client: TestClient) -> None:
     url = "/api/observations/1"
     shape = "/observations/{id}"
@@ -183,6 +261,83 @@ def test_edit_history_and_rollback(client: TestClient) -> None:
     check(client.get("/api/observations/999999"), shape, "get", 404)
 
 
+def test_invalid_observation_edits_leave_history_intact(client: TestClient) -> None:
+    for obs_id, invalid_fields in (
+        (
+            1,
+            [
+                {"date_to": "2020-06-20"},
+                {"date_precision": None},
+                {"date_from": None, "date_to": None, "date_raw": None},
+                {"obs_year": 2019},
+                {"taxon_id": None},
+                {"flags": ["quote_not_found"]},
+                {"flags": ["value_not_in_quote"], "value_raw": "19.06"},
+            ],
+        ),
+        (31, [{"pub_year": 2018}, {"obs_year": 2018}, {"pub_title": None}]),
+    ):
+        url = f"/api/observations/{obs_id}"
+        before = client.get(url).json()
+        for fields in invalid_fields:
+            res = client.patch(
+                url, json={"editor": "Тест", "action": "edit", "fields": fields}
+            )
+            check(res, "/observations/{id}", "patch", 422)
+        assert client.get(url).json() == before
+
+
+def test_year_flag_tracks_book_and_edit_history(client: TestClient) -> None:
+    url = "/api/observations/1"
+
+    def edit(fields: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
+        res = client.patch(
+            url, json={"editor": "Тест", "action": "edit", "fields": fields}
+        )
+        check(res, "/observations/{id}", "patch", 200)
+        value = res.json()
+        return value["observation"]["flags"], value["edits"][-1]["changes"]
+
+    flags, changes = edit(
+        {"obs_year": 2019, "date_from": "2019-06-19", "date_to": "2019-06-19"}
+    )
+    assert flags == ["year_outside_book"]
+    assert changes["flags"] == {"old": [], "new": flags}
+
+    flags, changes = edit({"flags": ["date_ambiguous"]})
+    assert flags == ["date_ambiguous", "year_outside_book"]
+    assert changes["flags"] == {"old": ["year_outside_book"], "new": flags}
+    assert edit({"flags": ["date_ambiguous"]}) == (flags, {})
+
+    flags, changes = edit(
+        {"obs_year": 2020, "date_from": "2020-06-19", "date_to": "2020-06-19"}
+    )
+    assert flags == ["date_ambiguous"]
+    assert changes["flags"] == {
+        "old": ["date_ambiguous", "year_outside_book"],
+        "new": flags,
+    }
+    assert edit({"flags": ["date_ambiguous", "year_outside_book"]}) == (flags, {})
+
+
+def test_patch_after_imported_edit_keeps_audit_order(
+    client: TestClient, database: Engine
+) -> None:
+    with database.begin() as conn:
+        conn.exec_driver_sql(
+            "UPDATE observation_edits SET created_at=clock_timestamp()+interval '1 hour' "
+            "WHERE observation_id=6"
+        )
+    url = "/api/observations/6"
+    response = client.patch(url, json={"action": "verify", "editor": "Рецензент"})
+    check(response, "/observations/{id}", "patch", 200)
+    detail = client.get(url).json()
+    last = detail["edits"][-1]
+    assert last["status_before"] == "edited"
+    assert last["status_after"] == detail["observation"]["status"] == "verified"
+    assert last["created_at"] == detail["observation"]["updated_at"]
+
+
 def test_saved_queries(client: TestClient) -> None:
     url = "/api/saved-queries"
     check(client.get(url), "/saved-queries", "get", 200)
@@ -208,6 +363,8 @@ def test_exports(client: TestClient) -> None:
     )
     expected = [c["header"] for c in cols]
     url = "/api/export"
+    for invalid_params in ({}, {"format": "txt"}):
+        check(client.get(url, params=invalid_params), "/export", "get", 400)
     filters = {"taxon_id": 13, "years": "2020", "doc_years": "2020"}
     res = client.get(url, params={"format": "csv", **filters})
     check(res, "/export", "get", 200)

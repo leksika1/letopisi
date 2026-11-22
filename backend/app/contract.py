@@ -36,7 +36,13 @@ async def api_error(request: Request, exc: Exception) -> JSONResponse:
     elif isinstance(exc, (IntegrityError, DataError)):
         status, message = 422, "Значение нарушает ограничение базы данных"
     elif isinstance(exc, RequestValidationError):
-        status, message = 422, "Проверьте обязательные поля и типы параметров"
+        if (
+            getattr(request.scope.get("route"), "operation_id", None)
+            == "exportObservations"
+        ):
+            status, message = 400, "Укажите формат выгрузки csv или xlsx"
+        else:
+            status, message = 422, "Проверьте обязательные поля и типы параметров"
     else:
         status, message = 500, "Ошибка сервиса"
     codes = {

@@ -1,13 +1,26 @@
-import { useMemo, useState } from 'react';
-import { useQueries } from '@tanstack/react-query';
+import { useState } from 'react';
+import type { CircleMarker as LeafletCircleMarker } from 'leaflet';
 import { CircleMarker, MapContainer, Rectangle, TileLayer, Tooltip } from 'react-leaflet';
-import { api, toQuery } from '../api/client';
-import { keys, useObservations, usePlaceSpecies } from '../api/hooks';
-import type { PlaceSpecies, SearchFilters } from '../api/types';
+import { useMapPlaceIds, useMapPlaces, usePlaceSpecies } from '../api/hooks';
+import type { SearchFilters } from '../api/types';
 import { formatDate } from '../lib/labels';
 
 /** Примерные границы заповедника «Пасвик» (как в задании B-4). */
 const RESERVE: [[number, number], [number, number]] = [[68.9, 28.6], [69.5, 30.2]];
+
+function labelMarker(layer: LeafletCircleMarker, name: string) {
+  const path = layer.getElement();
+  if (!(path instanceof SVGElement)) return;
+  path.setAttribute('aria-label', name);
+  path.setAttribute('role', 'button');
+  path.setAttribute('tabindex', '0');
+  path.onkeydown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      layer.fire('click');
+    }
+  };
+}
 
 /**
  * Карта мест. В контракте нет списка всех мест (GET /places), поэтому точки берутся из мест,
@@ -18,24 +31,15 @@ export default function PlaceMap({ filters, year, onPickTaxon }: {
   year?: number;
   onPickTaxon: (taxonId: number, label: string) => void;
 }) {
-  const rest: SearchFilters = { ...filters, place_id: undefined, place: undefined };
-  const { data: page } = useObservations(rest, 1, 500);
-  const placeIds = useMemo(
-    () => [...new Set((page?.items ?? []).map((o) => o.place_id).filter((x): x is number => !!x))],
-    [page],
-  );
-  const results = useQueries({
-    queries: placeIds.map((id) => ({
-      queryKey: keys.placeSpecies(id, year),
-      queryFn: () => api<PlaceSpecies>(`/places/${id}/species${toQuery({ year })}`),
-      staleTime: 60_000,
-    })),
-  });
-  const places = results.map((r) => r.data?.place).filter((p): p is NonNullable<typeof p> => !!p);
+  const ids = useMapPlaceIds(filters);
+  const locations = useMapPlaces(ids.data);
+  const places = locations.data ?? [];
   const withCoords = places.filter((p) => p.lat !== null && p.lon !== null);
   const without = places.filter((p) => p.lat === null || p.lon === null);
-  const [selected, setSelected] = useState<number | null>(filters.place_id ?? null);
-  const species = usePlaceSpecies(selected, year);
+  const [chosen, setSelected] = useState<number | null>(null);
+  const requested = filters.place_id ?? chosen;
+  const selected = requested !== null && ids.data?.includes(requested) ? requested : null;
+  const species = usePlaceSpecies(selected, year, filters.group);
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_22rem]">
@@ -53,7 +57,10 @@ export default function PlaceMap({ filters, year, onPickTaxon }: {
                 center={[p.lat as number, p.lon as number]}
                 radius={selected === p.id ? 10 : 7}
                 pathOptions={{ color: '#3a4f31', fillColor: selected === p.id ? '#d97706' : '#5b7a4c', fillOpacity: 0.85 }}
-                eventHandlers={{ click: () => setSelected(p.id) }}
+                eventHandlers={{
+                  add: (event) => labelMarker(event.target, p.name),
+                  click: () => setSelected(p.id),
+                }}
               >
                 <Tooltip>{p.name}{p.coords_source === 'manual_approx' ? ' (координаты приблизительные)' : ''}</Tooltip>
               </CircleMarker>
@@ -61,7 +68,9 @@ export default function PlaceMap({ filters, year, onPickTaxon }: {
           </MapContainer>
         </div>
         <p className="mt-1 text-xs text-stone-500">
-          На карте — места из текущей выдачи, у которых в справочнике есть координаты ({withCoords.length} из {places.length}).
+          На карте — места из текущей выдачи, у которых в справочнике есть координаты
+          {ids.isError || locations.isError ? '. Не удалось загрузить места.' :
+            ids.isLoading || locations.isLoading ? '. Загрузка…' : ` (${withCoords.length} из ${ids.data?.length ?? 0}).`}
         </p>
         {without.length > 0 && (
           <div className="mt-2 text-sm">

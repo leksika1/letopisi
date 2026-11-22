@@ -53,22 +53,22 @@ done
 python3 -m pipeline.devtools.build_stand_bundle --out data/stand_bundle
 
 echo "== 4/6 Книги (PDF)"
-if [[ -f $ZIP ]]; then
-    python3 - "$ZIP" <<'PY'
-import sys, zipfile
-names = {"1995": "book02_1995.pdf", "1996": "book03_1996.pdf", "2020": "book27_2020.pdf"}
-z = zipfile.ZipFile(sys.argv[1])
-for info in z.infolist():
-    if not info.filename.lower().endswith(".pdf"):
-        continue
-    for year, target in names.items():
-        if year in info.filename:
-            with open(f"data/raw/{target}", "wb") as out:
-                out.write(z.read(info))
-            print("  ", target)
-PY
-else
-    echo "  $ZIP не найден — сервис поднимется без страниц-источников (их можно добавить позже)"
+originals=$(python3 infra/import_originals.py "$ZIP")
+
+build_quality_report() {
+    local venv=data/.quality-venv
+    if [[ ! -x $venv/bin/python ]]; then
+        python3 -m venv "$venv" || {
+            sudo apt-get install -y python3-venv && python3 -m venv "$venv"
+        } || return 1
+    fi
+    if ! "$venv/bin/python" -c 'import pymupdf, pymorphy3, rapidfuzz; from jsonschema import Draft202012Validator; from backend.build_quality import build'; then
+        "$venv/bin/python" -m pip install 'rapidfuzz>=3' 'pymorphy3>=2,<3' 'pydantic>=2,<3' 'jsonschema[format]>=4.23,<5' 'pymupdf>=1.25,<1.28' || return 1
+    fi
+    "$venv/bin/python" -m backend.build_quality
+}
+if ! build_quality_report; then
+    echo "Не удалось пересчитать качество. Будет использован ранее сохранённый отчёт, если он есть." >&2
 fi
 
 echo "== 5/6 Сборка и запуск (несколько минут при первом запуске)"
@@ -76,11 +76,24 @@ cd infra
 "${DOCKER[@]}" compose up -d --build --wait
 
 echo "== 6/6 Загрузка данных"
-"${DOCKER[@]}" compose cp ../data/stand_bundle backend:/app/data/stand_bundle
-for f in ../data/raw/*.pdf; do
-    [[ -f $f ]] && "${DOCKER[@]}" compose cp "$f" backend:/app/data/raw/
-done
+"${DOCKER[@]}" compose cp ../data/stand_bundle backend:/app/data/
+while IFS= read -r name; do
+    if [[ -n $name ]]; then
+        "${DOCKER[@]}" compose cp "../data/raw/$name" backend:/app/data/raw/
+    fi
+done <<< "$originals"
 "${DOCKER[@]}" compose exec -T backend python pipeline/load.py /app/data/stand_bundle
+for report in quality.documents.json quality.json; do
+    if [[ -f ../data/$report ]]; then
+        # Write as the service user and publish only after the complete copy.
+        "${DOCKER[@]}" compose exec -T backend sh -ec '
+            temp=$(mktemp /app/data/.quality.XXXXXX)
+            trap '\''rm -f "$temp"'\'' EXIT
+            cat > "$temp"
+            mv "$temp" "/app/data/$1"
+        ' sh "$report" < "../data/$report"
+    fi
+done
 curl -fsS http://127.0.0.1:8000/api/health && echo
 IP=$(curl -fsS -H 'Metadata-Flavor: Google' http://169.254.169.254/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip 2>/dev/null || true)
 echo "Готово: http://${IP:-<публичный IP VM>}:8000/"

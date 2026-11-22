@@ -1,0 +1,4 @@
+-r ../../backend/requirements-dev.txt
+-r ../../pipeline/ingest/requirements.txt
+playwright>=1.51,<2
+coverage>=7.10,<8
