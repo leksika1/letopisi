@@ -1,0 +1,31 @@
+[
+ {
+  "match": "В лагере у подножия Калкупи в июле наблюдали",
+  "records": [
+   {
+    "chunk_ref": 1,
+    "record_type": "observation",
+    "object_type": "taxon",
+    "object_raw": "красно-серых полевок (Myodes rufocanus)",
+    "quote": "В лагере у подножия Калкупи в июле наблюдали красно-\nсерых полевок (Myodes rufocanus)",
+    "date_raw": "в июле",
+    "obs_year": 2020,
+    "toponym_raw": "у подножия Калкупи",
+    "habitat_raw": "в лагере",
+    "event_raw": "приходили есть яблоки",
+    "observers_raw": "Валовой Е.В."
+   },
+   {
+    "chunk_ref": 1,
+    "record_type": "observation",
+    "object_type": "taxon",
+    "object_raw": "полёвки",
+    "quote": "полёвки отмечались многократно, почти каждый день (цитата искажена моделью)",
+    "date_raw": null,
+    "obs_year": 2020,
+    "observers_raw": "Валовой Е.В.",
+    "value_raw": "7"
+   }
+  ]
+ }
+]

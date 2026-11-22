@@ -1,0 +1,536 @@
+id,taxon_id,name,lang,kind
+1,1,Salix caprea,lat,accepted
+2,1,Ива козья,ru,accepted
+3,1,ива козья,ru,variant
+4,2,Tussilago farfara,lat,accepted
+5,2,Мать-и-мачеха,ru,accepted
+6,2,мать-и-мачеха обыкновенная,ru,variant
+7,3,Betula nana,lat,accepted
+8,3,Береза карликовая,ru,accepted
+9,3,Берёза карликовая,ru,variant
+10,3,карликовая березка,ru,variant
+11,4,Betula pubescens,lat,accepted
+12,4,Береза пушистая,ru,accepted
+13,4,Берёза пушистая,ru,variant
+14,4,Betula pubescens Ehrh.,lat,variant
+15,5,Pinus sylvestris,lat,accepted
+16,5,Сосна обыкновенная,ru,accepted
+17,5,Pinus sylvestris L.,lat,variant
+18,6,Rubus chamaemorus,lat,accepted
+19,6,Морошка,ru,accepted
+20,6,Морошка приземистая,ru,variant
+21,7,Vaccinium myrtillus,lat,accepted
+22,7,Черника,ru,accepted
+23,7,Черника обыкновенная,ru,variant
+24,8,Vaccinium vitis-idaea,lat,accepted
+25,8,Брусника,ru,accepted
+26,8,Брусника обыкновенная,ru,variant
+27,9,Vaccinium uliginosum,lat,accepted
+28,9,Голубика,ru,accepted
+29,9,Голубика болотная,ru,variant
+30,10,Empetrum hermaphroditum,lat,accepted
+31,10,Водяника обоеполая,ru,accepted
+32,10,Вороника,ru,variant
+33,10,Вороника обоеполая,ru,variant
+34,11,Rhododendron tomentosum,lat,accepted
+35,11,Багульник болотный,ru,accepted
+36,11,Ledum palustre,lat,synonym
+37,11,Ledum palustre L.,lat,synonym
+38,12,Cornus suecica,lat,accepted
+39,12,Дерен шведский,ru,accepted
+40,12,Chamaepericlymenum suecicum,lat,synonym
+41,12,Дёрен шведский,ru,variant
+42,13,Geranium sylvaticum,lat,accepted
+43,13,Герань лесная,ru,accepted
+44,13,Geranium sylvaticum L.,lat,variant
+45,13,герани лесной,ru,variant
+46,14,Trollius europaeus,lat,accepted
+47,14,Купальница европейская,ru,accepted
+48,14,Trollius europaea,lat,variant
+49,14,Купальница европ.,ru,variant
+50,15,Eriophorum vaginatum,lat,accepted
+51,15,Пушица влагалищная,ru,accepted
+52,16,Alces alces,lat,accepted
+53,16,Лось,ru,accepted
+54,16,лосиха,ru,variant
+55,16,лосенок,ru,variant
+56,16,Moose,lat,variant
+57,17,Ursus arctos,lat,accepted
+58,17,Бурый медведь,ru,accepted
+59,17,медведь,ru,variant
+60,17,Ursus arctos L.,lat,variant
+61,18,Lepus timidus,lat,accepted
+62,18,Заяц-беляк,ru,accepted
+63,18,Заяц беляк,ru,variant
+64,18,беляк,ru,variant
+65,19,Vulpes vulpes,lat,accepted
+66,19,Обыкновенная лисица,ru,accepted
+67,19,Лисица,ru,variant
+68,19,лиса,ru,variant
+69,20,Mustela erminea,lat,accepted
+70,20,Горностай,ru,accepted
+76,22,Martes martes,lat,accepted
+77,22,Лесная куница,ru,accepted
+78,22,Куница,ru,variant
+79,23,Gulo gulo,lat,accepted
+80,23,Росомаха,ru,accepted
+81,24,Sciurus vulgaris,lat,accepted
+82,24,Обыкновенная белка,ru,accepted
+83,24,Белка,ru,variant
+84,25,Rangifer tarandus,lat,accepted
+85,25,Северный олень,ru,accepted
+86,26,Cygnus cygnus,lat,accepted
+87,26,Лебедь-кликун,ru,accepted
+88,26,кликун,ru,variant
+89,27,Bucephala clangula,lat,accepted
+90,27,Гоголь,ru,accepted
+91,27,Обыкновенный гоголь,ru,variant
+92,28,Lagopus lagopus,lat,accepted
+93,28,Белая куропатка,ru,accepted
+94,29,Tetrao urogallus,lat,accepted
+95,29,Глухарь,ru,accepted
+96,29,Обыкновенный глухарь,ru,variant
+97,30,Cuculus canorus,lat,accepted
+98,30,Обыкновенная кукушка,ru,accepted
+99,30,Кукушка,ru,variant
+100,31,Parus major,lat,accepted
+101,31,Большая синица,ru,accepted
+102,32,Plectrophenax nivalis,lat,accepted
+103,32,Пуночка,ru,accepted
+104,1,Amerina tomentosa,lat,synonym
+105,1,Capraea vulgaris,lat,synonym
+106,1,Nectopix capraea,lat,synonym
+107,1,Nectopix caprea,lat,synonym
+108,1,Nectopix sphacelata,lat,synonym
+109,1,Salix aquatica,lat,synonym
+110,1,Salix aurigerana angustifolia,lat,synonym
+111,1,Salix aurigerana angustilobia,lat,synonym
+112,1,Salix bakko,lat,synonym
+113,1,Salix caprea digyna,lat,synonym
+114,1,Salix caprea elongata,lat,synonym
+115,1,Salix caprea kilmarnocki,lat,synonym
+116,1,Salix caprea latifolia,lat,synonym
+117,1,Salix caprea macrophylla,lat,synonym
+118,1,Salix caprea microphylla,lat,synonym
+119,1,Salix caprea ovata,lat,synonym
+120,1,Salix caprea pendula,lat,synonym
+121,1,Salix caprea serrata,lat,synonym
+122,1,Salix caprea subglabra,lat,synonym
+123,1,Salix caprea tricolor,lat,synonym
+124,1,Salix caprea coaetanea,lat,synonym
+125,1,Salix caprea hultenii,lat,synonym
+126,1,Salix caprea sericea,lat,synonym
+127,1,Salix caprea sphacelata,lat,synonym
+128,1,Salix caprea alpina,lat,synonym
+129,1,Salix caprea androgyna,lat,synonym
+130,1,Salix caprea angustifolia,lat,synonym
+131,1,Salix caprea cordata,lat,synonym
+132,1,Salix caprea elliptica,lat,synonym
+133,1,Salix caprea humilior,lat,synonym
+134,1,Salix caprea ishidoyana,lat,synonym
+135,1,Salix caprea lanata,lat,synonym
+136,1,Salix caprea lanatifolia,lat,synonym
+137,1,Salix caprea legitima,lat,synonym
+138,1,Salix caprea minor,lat,synonym
+139,1,Salix caprea oblongata,lat,synonym
+140,1,Salix caprea orbicularis,lat,synonym
+141,1,Salix caprea pedunculata,lat,synonym
+142,1,Salix caprea ramuliflorus,lat,synonym
+143,1,Salix caprea rotundifolia,lat,synonym
+144,1,Salix caprea tenuifolia,lat,synonym
+145,1,Salix caprea ternata,lat,synonym
+146,1,Salix caprea tomentosa,lat,synonym
+147,1,Salix caprea trichoandra,lat,synonym
+148,1,Salix caprina,lat,synonym
+149,1,Salix coaetanea,lat,synonym
+150,1,Salix coatanea,lat,synonym
+151,1,Salix grandifolia,lat,synonym
+152,1,Salix hallaisanensis,lat,synonym
+153,1,Salix hallaisanensis elongata,lat,synonym
+154,1,Salix hallaisanensis longifolia,lat,synonym
+155,1,Salix hallaisanensis nervosa,lat,synonym
+156,1,Salix hallaisanensis orbicularis,lat,synonym
+157,1,Salix hallisanensis elongata,lat,synonym
+158,1,Salix hultenii,lat,synonym
+159,1,Salix hultenii angustifolia,lat,synonym
+160,1,Salix hultenii elongata,lat,synonym
+161,1,Salix hybrida,lat,synonym
+162,1,Salix idae,lat,synonym
+163,1,Salix ishidoyana,lat,synonym
+164,1,Salix lanata,lat,synonym
+165,1,Salix latifolia,lat,synonym
+166,1,Salix praecox,lat,synonym
+167,1,Salix raddeana subglabra,lat,synonym
+168,1,Salix silesiaca,lat,synonym
+169,1,Salix sphacelata,lat,synonym
+170,1,Salix tomentosa,lat,synonym
+171,1,Salix tomentosa abortiva,lat,synonym
+172,1,Salix tomentosa androgyna,lat,synonym
+173,1,Salix tomentosa angustifolia,lat,synonym
+174,1,Salix tomentosa brevistachia,lat,synonym
+175,1,Salix tomentosa geminata,lat,synonym
+176,1,Salix tomentosa macrophylla,lat,synonym
+177,1,Salix tomentosa macrostachia,lat,synonym
+178,1,Salix tomentosa monstruosa,lat,synonym
+179,1,Salix tomentosa rotundifolia,lat,synonym
+180,1,Salix tomentosa tenuifolia,lat,synonym
+181,1,Salix tomentosa ternata,lat,synonym
+182,1,Salix ulmifolia,lat,synonym
+183,2,Cineraria farfara,lat,synonym
+184,2,Farfara radiata,lat,synonym
+185,2,Petasites farfara,lat,synonym
+186,2,Tussilago alpestris,lat,synonym
+187,2,Tussilago farfara pallida,lat,synonym
+188,2,Tussilago farfara duplicatolobatum,lat,synonym
+189,2,Tussilago farfara spinulifolia,lat,synonym
+190,2,Tussilago farfara tubulosa,lat,synonym
+191,2,Tussilago generalis,lat,synonym
+192,2,Tussilago radiata,lat,synonym
+193,2,Tussilago ruderalis,lat,synonym
+194,2,Tussilago rupestris,lat,synonym
+195,2,Tussilago umbertina,lat,synonym
+196,2,Tussilago vulgaris,lat,synonym
+197,3,Alnus nana,lat,synonym
+198,3,Betula alba nana,lat,synonym
+199,3,Betula crenata,lat,synonym
+200,3,Betula glandulosa intermedia,lat,synonym
+201,3,Betula littelliana,lat,synonym
+202,3,Betula nana magnifolia,lat,synonym
+203,3,Betula nana reducta,lat,synonym
+204,3,Betula nana relicta,lat,synonym
+205,3,Betula nana tundrarum,lat,synonym
+206,3,Betula nana borealis,lat,synonym
+207,3,Betula nana europaea,lat,synonym
+208,3,Betula nana flabellifolia,lat,synonym
+209,3,Betula nana genuina,lat,synonym
+210,3,Betula nana intermedia,lat,synonym
+211,3,Betula nana macrophylla,lat,synonym
+212,3,Betula nana vulgaris,lat,synonym
+213,3,Betula naniformis,lat,synonym
+214,3,Betula tundrarum,lat,synonym
+215,3,Betula viminea,lat,synonym
+216,3,Betula viminea serrulata,lat,synonym
+217,3,Chamaebetula acutifolia,lat,synonym
+218,3,Chamaebetula nana,lat,synonym
+219,4,Betula alba pubescens,lat,synonym
+220,4,Betula alba alba,lat,synonym
+221,4,Betula alba frutescens,lat,synonym
+222,4,Betula alba macrophylla,lat,synonym
+223,4,Betula alba pumila,lat,synonym
+224,4,Betula lenta,lat,synonym
+225,4,Betula murithii,lat,synonym
+226,4,Betula ordorata pubescens,lat,synonym
+227,4,Betula pubescens amoena,lat,synonym
+228,4,Betula pubescens auriculata,lat,synonym
+229,4,Betula pubescens barbara,lat,synonym
+230,4,Betula pubescens cordata,lat,synonym
+231,4,Betula pubescens curtipendula,lat,synonym
+232,4,Betula pubescens depressa,lat,synonym
+233,4,Betula pubescens dumetorum,lat,synonym
+234,4,Betula pubescens falcata,lat,synonym
+235,4,Betula pubescens helvola,lat,synonym
+236,4,Betula pubescens hirsuta,lat,synonym
+237,4,Betula pubescens horrida,lat,synonym
+238,4,Betula pubescens latisquama,lat,synonym
+239,4,Betula pubescens ludens,lat,synonym
+240,4,Betula pubescens mellifera,lat,synonym
+241,4,Betula pubescens nemoralis,lat,synonym
+242,4,Betula pubescens nemorosa,lat,synonym
+243,4,Betula pubescens obtusata,lat,synonym
+244,4,Betula pubescens parallela,lat,synonym
+245,4,Betula pubescens populifomis,lat,synonym
+246,4,Betula pubescens reticulata,lat,synonym
+247,4,Betula pubescens stenocarpa,lat,synonym
+248,4,Betula pubescens suberecta,lat,synonym
+249,4,Betula pubescens submontana,lat,synonym
+250,4,Betula pubescens torminalis,lat,synonym
+251,4,Betula pubescens turgida,lat,synonym
+252,4,Betula pubescens sibakademica,lat,synonym
+253,4,Betula pubescens typica,lat,synonym
+254,4,Betula talassica,lat,synonym
+255,5,Pinus cretacea,lat,synonym
+256,5,Pinus erzeroomica,lat,synonym
+257,5,Pinus rigensis,lat,synonym
+258,5,Pinus scotica,lat,synonym
+259,5,Pinus sylvestris lapponica,lat,synonym
+260,5,Pinus sylvestris scotica,lat,synonym
+261,5,Pinus sylvestris catalaunica,lat,synonym
+262,5,Pinus sylvestris cretacea,lat,synonym
+263,5,Pinus sylvestris fastigiata,lat,synonym
+264,5,Pinus sylvestris fruticosa,lat,synonym
+265,5,Pinus sylvestris nevadensis,lat,synonym
+266,5,Pinus sylvestris pyreneica,lat,synonym
+267,5,Pinus sylvestris tatarica,lat,synonym
+268,5,Pinus tatarica,lat,synonym
+269,6,Chamaemorus anglica,lat,synonym
+270,6,Chamaemorus chamaemorus,lat,synonym
+271,6,Chamaemorus norvegicus,lat,synonym
+272,6,Chamaemorus norwegica,lat,synonym
+273,6,Idaeobatus chamaemorus,lat,synonym
+274,6,Morus norwegica,lat,synonym
+275,6,Rubus chamaemorus pseudochamaemorus,lat,synonym
+276,6,Rubus horridulus,lat,synonym
+277,6,Rubus nubis,lat,synonym
+278,6,Rubus pseudochamaemorus,lat,synonym
+279,6,Rubus pungens horridulus,lat,synonym
+280,6,Rubus ribis-folius,lat,synonym
+281,6,Rubus yessoicus,lat,synonym
+282,7,Myrtillus niger,lat,synonym
+283,7,Myrtillus nigra,lat,synonym
+284,7,Vaccinium myrtillus minoriflora,lat,synonym
+285,7,Vaccinium myrtillus myrtillus,lat,synonym
+286,8,? ellipticum,lat,synonym
+287,8,Myrtillus exigua,lat,synonym
+288,8,Oxycoccus vitis-idaea,lat,synonym
+289,8,Rhodococcum minus,lat,synonym
+290,8,Rhodococcum vitis-idaea,lat,synonym
+291,8,Rhodococcum vitis-idaea minus,lat,synonym
+292,8,Vaccinium buxifolium,lat,synonym
+293,8,Vaccinium idaeum,lat,synonym
+294,8,Vaccinium jesoense,lat,synonym
+295,8,Vaccinium minus,lat,synonym
+296,8,Vaccinium nemorosum,lat,synonym
+297,8,Vaccinium pulchellum,lat,synonym
+298,8,Vaccinium punctatum,lat,synonym
+299,8,Vaccinium punctatum ellipticum,lat,synonym
+300,8,Vaccinium punctifolium,lat,synonym
+301,8,Vaccinium rubrum,lat,synonym
+302,8,Vaccinium vitis-idaea ellipticum,lat,synonym
+303,8,Vaccinium vitis-idaea leucocarpum,lat,synonym
+304,8,Vaccinium vitis-idaea longiflorum,lat,synonym
+305,8,Vaccinium vitis-idaea macrophyllum,lat,synonym
+306,8,Vaccinium vitis-idaea major,lat,synonym
+307,8,Vaccinium vitis-idaea microcarpum,lat,synonym
+308,8,Vaccinium vitis-idaea microphyllum,lat,synonym
+309,8,Vaccinium vitis-idaea minus,lat,synonym
+310,8,Vaccinium vitis-idaea pyricarpum,lat,synonym
+311,8,Vaccinium vitis-idaea fma,lat,synonym
+312,8,Vaccinium vitis-idaea crenatum,lat,synonym
+313,8,Vaccinium vitis-idaea elatum,lat,synonym
+314,8,Vaccinium vitis-idaea genuinum,lat,synonym
+315,8,Vaccinium vitis-idaea minor,lat,synonym
+316,8,Vaccinium vitis-idaea ovata,lat,synonym
+317,8,Vaccinium vitis-idaea pumilum,lat,synonym
+318,8,Vaccinium vitis-idaea punctata,lat,synonym
+319,8,Vaccinium vitis-idaea punctifolia,lat,synonym
+320,8,Vaccinium vitus-idaea,lat,synonym
+321,8,Vitis-idaea punctata,lat,synonym
+322,8,Vitis-idaea punctata minor,lat,synonym
+323,8,Vitis-idaea punctifolia,lat,synonym
+324,8,Vitis-idaea vitis-idaea,lat,synonym
+325,10,Empetrum eamesii hermaphroditum,lat,synonym
+326,10,Empetrum hermaphroditicum,lat,synonym
+327,10,Empetrum hermaphroditum americanum,lat,synonym
+328,10,Empetrum hermaphroditum europaeum,lat,synonym
+329,10,Empetrum nigrum hermaphroditum,lat,synonym
+330,11,Ledum decumbens,lat,synonym
+331,11,Ledum dilatatum,lat,synonym
+332,11,Ledum graveolens,lat,synonym
+333,11,Ledum groenlandicum denudatum,lat,synonym
+334,11,Ledum maximum,lat,synonym
+335,11,Ledum palustre decumbens,lat,synonym
+336,11,Ledum palustre denudatum,lat,synonym
+337,11,Ledum palustre parvifolium,lat,synonym
+338,11,Ledum palustre longifolium,lat,synonym
+339,11,Ledum palustre angustifolium,lat,synonym
+340,11,Ledum palustre angustum,lat,synonym
+341,11,Ledum palustre dilatatum,lat,synonym
+342,11,Ledum palustre maximum,lat,synonym
+343,11,Ledum palustre minus,lat,synonym
+344,11,Ledum palustre palustre,lat,synonym
+345,11,Ledum palustre thymifolium,lat,synonym
+346,11,Ledum palustriforme,lat,synonym
+347,11,Ledum rosmarinifolium,lat,synonym
+348,11,Ledum tomentosum,lat,synonym
+349,11,Rhododendron palustre,lat,synonym
+350,11,Rhododendron palustre decumbens,lat,synonym
+351,11,Rhododendron subarcticum,lat,synonym
+352,11,Rhododendron tomentosum decumbens,lat,synonym
+353,11,Rhododendron tomentosum subacrticum,lat,synonym
+354,11,Rhododendron tomentosum subarcticum,lat,synonym
+355,12,Arctocrania suecica,lat,synonym
+356,12,Chloranthus integrifolius,lat,synonym
+357,12,Cornella suecica,lat,synonym
+358,12,Cornus biramis,lat,synonym
+359,12,Cornus borealis,lat,synonym
+360,12,Cornus herbacea,lat,synonym
+361,12,Cornus suecia,lat,synonym
+362,12,Cornus suecica semivirescens,lat,synonym
+363,12,Cornus suecica suecica,lat,synonym
+364,12,Cornus suecica leucocarpa,lat,synonym
+365,12,Eukrania suecica,lat,synonym
+366,12,Swida suecica,lat,synonym
+367,13,? brachystemon,lat,synonym
+368,13,Geranium aconitifolium venosum,lat,synonym
+369,13,Geranium alpestre,lat,synonym
+370,13,Geranium angulatum,lat,synonym
+371,13,Geranium argenteum,lat,synonym
+372,13,Geranium baicalense,lat,synonym
+373,13,Geranium batrachioides,lat,synonym
+374,13,Geranium caeruleo-purpureum,lat,synonym
+375,13,Geranium caroli-principis,lat,synonym
+376,13,Geranium caruleatum caroli-principis,lat,synonym
+377,13,Geranium eglandulosum,lat,synonym
+378,13,Geranium endressii glandulosum,lat,synonym
+379,13,Geranium fastigiatum,lat,synonym
+380,13,Geranium knollii,lat,synonym
+381,13,Geranium krylovii,lat,synonym
+382,13,Geranium lemanianum,lat,synonym
+383,13,Geranium losae,lat,synonym
+384,13,Geranium praealpinum,lat,synonym
+385,13,Geranium pratense sylvaticum,lat,synonym
+386,13,Geranium purpureocaeruleum,lat,synonym
+387,13,Geranium ranunculifolium,lat,synonym
+388,13,Geranium striatum,lat,synonym
+389,13,Geranium sylvaticum albiflorum,lat,synonym
+390,13,Geranium sylvaticum angustisectum,lat,synonym
+391,13,Geranium sylvaticum eglandulosum,lat,synonym
+392,13,Geranium sylvaticum latisectum,lat,synonym
+393,13,Geranium sylvaticum lilacinum,lat,synonym
+394,13,Geranium sylvaticum minoriflorum,lat,synonym
+395,13,Geranium sylvaticum pallidiflorum,lat,synonym
+396,13,Geranium sylvaticum parviflorum,lat,synonym
+397,13,Geranium sylvaticum perglandulosum,lat,synonym
+398,13,Geranium sylvaticum purpureum,lat,synonym
+399,13,Geranium sylvaticum roseum,lat,synonym
+400,13,Geranium sylvaticum sublilacinum,lat,synonym
+401,13,Geranium sylvaticum alpinum,lat,synonym
+402,13,Geranium sylvaticum brachystemon,lat,synonym
+403,13,Geranium sylvaticum glandulosum,lat,synonym
+404,13,Geranium sylvaticum grandiflorum,lat,synonym
+405,13,Geranium sylvaticum hirsutum,lat,synonym
+406,13,Geranium sylvaticum lemanianum,lat,synonym
+407,13,Geranium sylvaticum myriadenum,lat,synonym
+408,13,Geranium sylvaticum stroblii,lat,synonym
+409,13,Geranium sylvaticum subeglandulosum,lat,synonym
+410,13,Geranium sylvaticum uralense,lat,synonym
+411,13,Geranium sylvaticum vestitum,lat,synonym
+412,13,Geranium sylvaticum wanneri,lat,synonym
+413,13,Geranium sylvaticum album,lat,synonym
+414,13,Geranium sylvaticum alpestre,lat,synonym
+415,13,Geranium sylvaticum argenteum,lat,synonym
+416,13,Geranium sylvaticum borealis,lat,synonym
+417,13,Geranium sylvaticum brachypetalum,lat,synonym
+418,13,Geranium sylvaticum denudatum,lat,synonym
+419,13,Geranium sylvaticum fastigiatum,lat,synonym
+420,13,Geranium sylvaticum ferrugineum,lat,synonym
+421,13,Geranium sylvaticum glabriusculum,lat,synonym
+422,13,Geranium sylvaticum glanduligerum,lat,synonym
+423,13,Geranium sylvaticum minus,lat,synonym
+424,13,Geranium sylvaticum ranunculifolium,lat,synonym
+425,13,Geranium sylvaticum subhirsutum,lat,synonym
+426,13,Geranium sylvaticum typicum,lat,synonym
+427,13,Geranium sylvaticum variegatum,lat,synonym
+428,13,Geranium sylvestre,lat,synonym
+429,13,Geranium uralense,lat,synonym
+430,13,Geranium venosum,lat,synonym
+431,14,Trollius connivens,lat,synonym
+432,14,Trollius emarginatus,lat,synonym
+433,14,Trollius europaeus brevirostris,lat,synonym
+434,14,Trollius europaeus denticulatus,lat,synonym
+435,14,Trollius europaeus humilis,lat,synonym
+436,14,Trollius europaeus lobatus,lat,synonym
+437,14,Trollius europaeus longirostris,lat,synonym
+438,14,Trollius europaeus globosus,lat,synonym
+439,14,Trollius europaeus napellifolius,lat,synonym
+440,14,Trollius europaeus transsilvanicus,lat,synonym
+441,14,Trollius europaeus chloranthus,lat,synonym
+442,14,Trollius europaeus humilior,lat,synonym
+443,14,Trollius europaeus microstylis,lat,synonym
+444,14,Trollius europaeus minimus,lat,synonym
+445,14,Trollius europaeus vulgaris,lat,synonym
+446,14,Trollius germanicus,lat,synonym
+447,14,Trollius globosus,lat,synonym
+448,14,Trollius grandiflorus,lat,synonym
+449,14,Trollius humilis,lat,synonym
+450,14,Trollius medius,lat,synonym
+451,14,Trollius minimus,lat,synonym
+452,14,Trollius montanus,lat,synonym
+453,14,Trollius napellifolius,lat,synonym
+454,14,Trollius napellifolius erectus,lat,synonym
+455,14,Trollius napellifolius patulus,lat,synonym
+456,14,Trollius patulus,lat,synonym
+457,14,Trollius rotundiflorus,lat,synonym
+458,14,Trollius sphaericus,lat,synonym
+459,14,Trollius tauricus,lat,synonym
+460,14,Trollius viridiflorus,lat,synonym
+461,14,Trollius viridis,lat,synonym
+462,15,Eriophorum caespitosum,lat,synonym
+463,15,Eriophorum caespitosum humilius,lat,synonym
+464,15,Eriophorum callithrix,lat,synonym
+465,15,Eriophorum callitrix erubescens,lat,synonym
+466,15,Eriophorum fauriei,lat,synonym
+467,15,Eriophorum kerneri,lat,synonym
+468,15,Eriophorum scabridum,lat,synonym
+469,15,Eriophorum spissum,lat,synonym
+470,15,Eriophorum spissum erubescens,lat,synonym
+471,15,Eriophorum vaginatum erubescens,lat,synonym
+472,15,Eriophorum vaginatum fauriei,lat,synonym
+473,15,Eriophorum vaginatum spissum,lat,synonym
+474,15,Linagrostis vaginata,lat,synonym
+475,15,Plumaria vaginata,lat,synonym
+476,15,Scirpus fauriei,lat,synonym
+477,15,Scirpus fauriei vaginatus,lat,synonym
+478,15,Scirpus vaginatus,lat,synonym
+479,16,Alces alce,lat,synonym
+480,16,Alces antiquorum,lat,synonym
+481,16,Alces coronatus,lat,synonym
+482,16,Alces europaeus,lat,synonym
+483,16,Alces jubata,lat,synonym
+484,16,Alces machilis,lat,synonym
+485,16,Alces muswa,lat,synonym
+486,16,Alces palmatus,lat,synonym
+487,16,Alces runnymedensis,lat,synonym
+488,16,Cervalces americanus,lat,synonym
+489,16,Cervus alces,lat,synonym
+490,17,Ursus horribilis,lat,synonym
+491,17,Ursus procerus,lat,synonym
+492,18,Lepus hibernicus,lat,synonym
+493,18,Lepus lutescens,lat,synonym
+494,18,Lepus othus tschuktschorum,lat,synonym
+495,18,Lepus timidus tschuktschorum,lat,synonym
+496,18,Lepus variabilis,lat,synonym
+497,19,Canis vulpes,lat,synonym
+498,19,Vulpes palmaria,lat,synonym
+499,22,Martes latinorum,lat,synonym
+500,22,Martes martes sabaneevi,lat,synonym
+501,22,Martes notialis,lat,synonym
+502,22,Martes ruthena,lat,synonym
+503,22,Martes spec,lat,synonym
+504,22,Martes sylvestris,lat,synonym
+505,22,Mustela spec,lat,synonym
+506,23,Gulo vulgaris,lat,synonym
+507,24,Sciurus alpinus,lat,synonym
+508,24,Sciurus balcanicus,lat,synonym
+509,24,Sciurus carpathicus,lat,synonym
+510,24,Sciurus croaticus,lat,synonym
+511,24,Sciurus europaeus,lat,synonym
+512,24,Sciurus fuscoater,lat,synonym
+513,24,Sciurus graeca,lat,synonym
+514,24,Sciurus italicus,lat,synonym
+515,24,Sciurus leucurus,lat,synonym
+516,24,Sciurus lilaeus,lat,synonym
+517,24,Sciurus typicus,lat,synonym
+518,24,Sciurus vulgaris hoffmanni,lat,synonym
+519,25,Cervus tarandus,lat,synonym
+520,25,Rangifer muscatinensis,lat,synonym
+521,25,Rangifer spitzbergensis,lat,synonym
+522,25,Rangifer tarandus platyrhynchos,lat,synonym
+523,26,Anas cygnus,lat,synonym
+524,26,Anas musicus,lat,synonym
+525,26,Anas spec,lat,synonym
+526,26,Cygnus ferus,lat,synonym
+527,26,Cygnus musicus,lat,synonym
+528,26,Olor cygnus,lat,synonym
+529,27,Anas glaucion,lat,synonym
+530,27,Clangula chrysophthalmos,lat,synonym
+531,27,Clangula glaucion,lat,synonym
+532,27,Fuligula clangula,lat,synonym
+533,27,Glaucionetta clangula,lat,synonym
+534,27,Nyroca clangula,lat,synonym
+535,30,Cuculus canorus kleinschmidti,lat,synonym
+536,31,Parus corsus,lat,synonym
+537,31,Parus newtoni,lat,synonym
+538,32,Calcarius nivalis,lat,synonym
+539,32,Emberiza nivalis,lat,synonym
+540,32,Plectrophenax nivalis subnivalis,lat,synonym
