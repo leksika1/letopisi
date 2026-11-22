@@ -1067,6 +1067,21 @@
             "null"
           ],
           "minimum": 1
+        },
+        "authors_raw": {
+          "description": "Строка авторов раздела как в тексте («Поликарпова Н.В., Бычков Ю.М»); null если не указаны.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "author_person_ids": {
+          "description": "Авторы раздела, сопоставленные со справочником persons.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "default": []
         }
       },
       "required": [
@@ -1139,6 +1154,16 @@
           ],
           "minimum": 0,
           "maximum": 1
+        },
+        "lines": {
+          "description": "Строки с координатами (из текстового слоя или OCR). null для DOCX/XLSX и когда координат нет.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ChunkLine"
+          }
         }
       },
       "required": [
@@ -2069,6 +2094,40 @@
         "header",
         "source",
         "rule"
+      ],
+      "additionalProperties": false
+    },
+    "ChunkLine": {
+      "description": "Строка текста внутри chunk: смещения в chunk.text и рамка на странице (доли 0..1). Нужна для точной подсветки цитаты.",
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bbox": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      },
+      "required": [
+        "text",
+        "start",
+        "end",
+        "bbox"
       ],
       "additionalProperties": false
     }

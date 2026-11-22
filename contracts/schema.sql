@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS sections (
     title           text    NOT NULL CHECK (title <> ''),
     pdf_page_from   integer CHECK (pdf_page_from >= 1),
     pdf_page_to     integer CHECK (pdf_page_to >= 1),
+    authors_raw     text,                    -- авторы раздела как в тексте
+    author_person_ids bigint[] NOT NULL DEFAULT '{}',
     CHECK (pdf_page_from IS NULL OR pdf_page_to IS NULL OR pdf_page_from <= pdf_page_to)
 );
 
@@ -61,6 +63,7 @@ CREATE TABLE IF NOT EXISTS chunks (
     text            text    NOT NULL,
     text_source     text    NOT NULL CHECK (text_source IN ('text_layer', 'ocr', 'manual')),
     ocr_confidence  real    CHECK (ocr_confidence BETWEEN 0 AND 1),
+    lines           jsonb   CHECK (lines IS NULL OR jsonb_typeof(lines) = 'array'),  -- [{text,start,end,bbox}]
     UNIQUE (document_id, ord)
 );
 
