@@ -1,0 +1,16 @@
+# Зависимости поиска (backend/app/search, backend/app/routers/search.py) и его тестов.
+fastapi>=0.110
+sqlalchemy>=2.0
+psycopg[binary]>=3.1
+pydantic>=2.5
+# нормализация из pipeline/normalize
+pymorphy3>=2.0
+pymorphy3-dicts-ru
+rapidfuzz>=3.0
+# LLM для /query/parse (необязательно: без ключа работают только правила)
+openai>=1.30
+# тесты
+pytest>=8
+httpx>=0.27
+jsonschema>=4.20
+openpyxl>=3.1
