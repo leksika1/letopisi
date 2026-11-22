@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import savedQueriesFixture from '@contracts/fixtures/saved_queries.json';
 import { exportUrl } from '../api/client';
 import { useCreateSavedQuery, useObservations } from '../api/hooks';
@@ -42,13 +42,12 @@ const DATA_ATTR: Partial<Record<FilterKey, string>> = { taxon: 'taxon_id', place
 
 export default function SearchPage() {
   const { filters, setFilters, patch, page, setParam, update, searchParams } = useUrlFilters();
-  const params = useParams();
   const navigate = useNavigate();
   const labels = useLabels();
   const tab = (TABS.find((t) => t.id === searchParams.get('tab'))?.id ?? 'all') as Tab;
   const tabDef = TABS.find((t) => t.id === tab) ?? TABS[0]!;
   const pageSize = PAGE_SIZES.includes(Number(searchParams.get('page_size'))) ? Number(searchParams.get('page_size')) : 50;
-  const selectedId = Number(params.id ?? searchParams.get('obs')) || null;
+  const selectedId = Number(searchParams.get('obs')) || null;
 
   const [queryText, setQueryText] = useState<string | undefined>(undefined);
   const [lastText, setLastText] = useState<string | null>(null);

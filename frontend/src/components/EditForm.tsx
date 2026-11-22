@@ -62,7 +62,17 @@ export default function EditForm({ observation: o, editor, pending, error, onSub
     () => Object.fromEntries(o.person_ids.map((id, i) => [id, o.labels.persons[i] ?? `#${id}`])),
   );
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => setD((x) => ({ ...x, [k]: v }));
-  const changes = changedFields(initial, d);
+  const draft: Draft = { ...d };
+  if (draft.record_type === 'publication') {
+    draft.object_type = 'publication';
+    draft.obs_year = draft.pub_year;
+  } else if (initial.record_type === 'publication') {
+    draft.object_type = draft.record_type === 'env_measurement' ? 'env_indicator'
+      : draft.taxon_id !== null ? 'taxon' : 'phenomenon';
+    draft.pub_title = draft.pub_authors = draft.pub_venue = null;
+    draft.pub_year = null;
+  }
+  const changes = changedFields(initial, draft);
   const nChanges = Object.keys(changes).length;
 
   const idField = (key: 'taxon_id' | 'place_id' | 'phenophase_id', kind: 'taxa' | 'places' | 'phenophases', lk: 'taxon' | 'place' | 'phenophase', current: string | null) => (
@@ -110,9 +120,9 @@ export default function EditForm({ observation: o, editor, pending, error, onSub
             </select>
           </div>
         </Row>
-        <Row label={FIELD_LABELS.obs_year ?? ''}>
+        {d.record_type !== 'publication' && <Row label={FIELD_LABELS.obs_year ?? ''}>
           <input className="input w-28" inputMode="numeric" value={d.obs_year ?? ''} onChange={(e) => set('obs_year', numOrNull(e.target.value))} />
-        </Row>
+        </Row>}
         <Row label={FIELD_LABELS.value_num ?? ''}>
           <input className="input w-28" inputMode="decimal" value={d.value_num ?? ''} onChange={(e) => set('value_num', numOrNull(e.target.value))} />
         </Row>
@@ -148,7 +158,7 @@ export default function EditForm({ observation: o, editor, pending, error, onSub
           <>
             {PUB_FIELDS.map((k) => (
               <Row key={k} label={FIELD_LABELS[k] ?? k}>
-                <input className="input" value={d[k] ?? ''} onChange={(e) => set(k, nullable(e.target.value))} />
+                <input className="input" required={k === 'pub_title'} value={d[k] ?? ''} onChange={(e) => set(k, nullable(e.target.value))} />
               </Row>
             ))}
             <Row label={FIELD_LABELS.pub_year ?? ''}>

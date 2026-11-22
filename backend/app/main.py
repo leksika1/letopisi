@@ -10,7 +10,7 @@ from sqlalchemy.exc import DataError, IntegrityError, SQLAlchemyError
 
 from .contract import api_error
 from .db import apply_schema, database_engine
-from .routers import documents, export, observations, queries, search
+from .routers import documents, export, observations, quality, queries, search
 
 VERSION = "1.0.0"
 
@@ -33,6 +33,7 @@ for router in (
     observations.router,
     queries.router,
     export.router,
+    quality.router,
 ):
     app.include_router(router)
 for error_type in (HTTPException, RequestValidationError, IntegrityError, DataError):

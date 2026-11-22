@@ -12,7 +12,13 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 
 from backend.app.db import ROOT
 from backend.app.main import app
-from pipeline.load import FIXTURES, load_fixtures, read_rows
+from pipeline.load import (
+    FIXTURES,
+    enrich_dictionaries,
+    load_dictionaries,
+    load_fixtures,
+    read_rows,
+)
 
 
 @pytest.mark.anyio
@@ -105,6 +111,59 @@ def test_invalid_fixture_rolls_back(database: Engine, tmp_path: Path) -> None:
     with database.connect() as conn:
         assert conn.scalar(text("SELECT count(*) FROM documents")) == 0
         assert conn.scalar(text("SELECT count(*) FROM observations")) == 0
+
+
+def test_live_dictionaries_are_idempotent_without_demo_books(database: Engine) -> None:
+    with database.begin() as conn:
+        changes = load_dictionaries(conn)
+        assert changes["taxon_names"] >= 500
+        assert all(n == 0 for n in load_dictionaries(conn).values())
+        assert conn.scalar(text("SELECT count(*) FROM documents")) == 0
+        assert (
+            conn.scalar(text("SELECT count(*) FROM places WHERE lat IS NOT NULL")) >= 17
+        )
+        assert (
+            conn.scalar(text("SELECT coords_source FROM places WHERE name='Паз'"))
+            == "gazetteer"
+        )
+
+
+def test_bundle_can_reference_a_csv_only_taxon(
+    database: Engine, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    bundle = tmp_path / "bundle"
+    shutil.copytree(FIXTURES, bundle)
+    csv_dir = tmp_path / "dictionaries"
+    csv_dir.mkdir()
+    (csv_dir / "taxa.csv").write_text(
+        "id,name_lat,name_ru,rank,group_ru\n701,Fungi exemplum,Гриб,species,грибы\n",
+        encoding="utf-8",
+    )
+    (csv_dir / "taxon_names.csv").write_text(
+        "id,taxon_id,name,lang,kind\n9901,701,Гриб,ru,accepted\n", encoding="utf-8"
+    )
+    monkeypatch.setattr("pipeline.load.ROOT", tmp_path)
+    rows = read_rows(bundle / "observations.jsonl")
+    rows[0]["taxon_id"] = 701
+    (bundle / "observations.jsonl").write_text(
+        "\n".join(map(json.dumps, rows)), encoding="utf-8"
+    )
+    assert load_fixtures(database, bundle)["dictionary_changes"] == 2
+    assert all(n == 0 for n in load_fixtures(database, bundle).values())
+    with database.begin() as conn:
+        assert (
+            conn.scalar(
+                text("SELECT taxon_id FROM observations WHERE id=:id"),
+                {"id": rows[0]["id"]},
+            )
+            == 701
+        )
+        (csv_dir / "taxa.csv").write_text(
+            "id,name_lat,rank,group_ru\n701,Other species,species,грибы\n",
+            encoding="utf-8",
+        )
+        with pytest.raises(ValueError, match="701"):
+            enrich_dictionaries(conn, csv_dir)
 
 
 @pytest.mark.parametrize(

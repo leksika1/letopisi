@@ -17,9 +17,9 @@ from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 from sqlalchemy import Engine
 
+from backend.app import jobs
 from backend.app.db import ROOT
 from backend.app.main import app
-from pipeline.ingest import jobs
 from pipeline.ingest import pdf as pdf_ingest
 from pipeline.ingest.common import Stats
 from pipeline.load import load_fixtures
@@ -69,6 +69,9 @@ def client(
     database: Engine, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> Iterator[TestClient]:
     monkeypatch.setenv("DATA_DIR", str(tmp_path / "data"))
+    monkeypatch.setenv("LLM_BACKEND", "mock")
+    monkeypatch.setenv("YC_API_KEY", "")
+    monkeypatch.setenv("YC_FOLDER_ID", "")
     load_fixtures(database)
     with TestClient(app) as http:
         yield http

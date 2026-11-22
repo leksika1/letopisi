@@ -1,6 +1,7 @@
 """Seed PostgreSQL from the checked-in contract fixtures."""
 
 import argparse
+import csv
 import json
 import sys
 from pathlib import Path
@@ -29,6 +30,33 @@ TABLE_FILES = (
     ("observations", "observations.jsonl"),
     ("observation_edits", "observation_edits.jsonl"),
     ("saved_queries", "saved_queries.json"),
+)
+DICTIONARY_TABLES = (
+    "taxa",
+    "taxon_names",
+    "places",
+    "place_names",
+    "persons",
+    "phenophases",
+)
+CSV_DICTIONARIES = (
+    (
+        "taxa",
+        ("name_lat",),
+        (
+            "name_ru",
+            "rank",
+            "genus",
+            "family",
+            '"order"',
+            "class",
+            "group_ru",
+            "gbif_key",
+        ),
+    ),
+    ("taxon_names", ("taxon_id", "name"), ("kind", "lang")),
+    ("places", ("name",), ("lat", "lon", "coords_source")),
+    ("place_names", ("place_id", "name"), ("kind",)),
 )
 
 
@@ -82,7 +110,77 @@ def check_document_sources(conn: Connection, rows: list[dict[str, Any]]) -> None
         )
 
 
-def load_fixtures(engine: Engine, directory: Path = FIXTURES) -> dict[str, int]:
+def enrich_dictionaries(conn: Connection, directory: Path) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for table, identity, columns in CSV_DICTIONARIES:
+        path = directory / f"{table}.csv"
+        if not path.is_file():
+            continue
+        with path.open(encoding="utf-8-sig", newline="") as stream:
+            rows = [
+                {k: v or None for k, v in row.items()} for row in csv.DictReader(stream)
+            ]
+        params = {"rows": json.dumps(rows)}
+        records = f"jsonb_populate_recordset(NULL::{table}, CAST(:rows AS jsonb))"
+        different = " OR ".join(f"t.{key} IS DISTINCT FROM f.{key}" for key in identity)
+        conflict = conn.scalar(
+            text(
+                f"SELECT t.id FROM {table} t JOIN {records} f USING (id) WHERE {different} LIMIT 1"
+            ),
+            params,
+        )
+        if conflict is not None:
+            raise ValueError(
+                f"{path.name}: ID {conflict} уже принадлежит другой записи"
+            )
+        inserted = seed_table(conn, table, rows)
+        # Empty enrichment cells carry no new information (e.g. an ungeocoded place).
+        assignments = ", ".join(f"{c} = COALESCE(f.{c}, t.{c})" for c in columns)
+        changes = " OR ".join(
+            f"(f.{c} IS NOT NULL AND f.{c} IS DISTINCT FROM t.{c})" for c in columns
+        )
+        updated = conn.execute(
+            text(
+                f"UPDATE {table} t SET {assignments} FROM {records} f "
+                f"WHERE t.id = f.id AND ({changes}) RETURNING t.id"
+            ),
+            params,
+        )
+        counts[table] = len(inserted) + len(updated.all())
+    return counts
+
+
+def sync_identity(conn: Connection, table: str) -> None:
+    # Explicit fixture IDs bypass identity defaults. Never rewind a used sequence.
+    conn.execute(
+        text(
+            f"WITH state AS (SELECT max(id) AS top_id, "
+            f"pg_get_serial_sequence('{table}', 'id')::regclass AS seq FROM {table}) "
+            "SELECT setval(seq, top_id) FROM state "
+            "WHERE top_id > coalesce(pg_sequence_last_value(seq), 0)"
+        )
+    )
+
+
+def load_dictionaries(conn: Connection) -> dict[str, int]:
+    """Install reference data for extraction without importing any demonstration books."""
+    conn.exec_driver_sql(
+        f"LOCK TABLE {', '.join(DICTIONARY_TABLES)} IN SHARE ROW EXCLUSIVE MODE"
+    )
+    counts = {
+        table: len(seed_table(conn, table, read_rows(FIXTURES / f"{table}.json")))
+        for table in DICTIONARY_TABLES
+    }
+    for table, changed in enrich_dictionaries(conn, ROOT / "dictionaries").items():
+        counts[table] += changed
+    for table in DICTIONARY_TABLES:
+        sync_identity(conn, table)
+    return counts
+
+
+def load_fixtures(
+    engine: Engine, directory: Path = FIXTURES, *, dictionaries: bool | None = None
+) -> dict[str, int]:
     inserted: dict[str, int] = {}
     with engine.begin() as conn:
         # Ordinary writers and simultaneous imports must agree on the next identity.
@@ -97,6 +195,14 @@ def load_fixtures(engine: Engine, directory: Path = FIXTURES) -> dict[str, int]:
             if table == "sections":
                 for row in rows:
                     row.setdefault("author_person_ids", [])
+            if table == "observations" and (
+                dictionaries
+                if dictionaries is not None
+                else directory.resolve() != FIXTURES.resolve()
+            ):
+                inserted["dictionary_changes"] = sum(
+                    enrich_dictionaries(conn, ROOT / "dictionaries").values()
+                )
             ids = seed_table(conn, table, rows)
             inserted[table] = len(ids)
             if table == "observations":
@@ -116,25 +222,24 @@ def load_fixtures(engine: Engine, directory: Path = FIXTURES) -> dict[str, int]:
                     )
                 inserted["observation_persons"] = len(links)
 
-        # Explicit fixture IDs bypass identity defaults. Never rewind a used sequence.
         for table, _ in TABLE_FILES:
-            conn.execute(
-                text(
-                    f"WITH state AS (SELECT max(id) AS top_id, "
-                    f"pg_get_serial_sequence('{table}', 'id')::regclass AS seq FROM {table}) "
-                    "SELECT setval(seq, top_id) FROM state "
-                    "WHERE top_id > coalesce(pg_sequence_last_value(seq), 0)"
-                )
-            )
+            sync_identity(conn, table)
     return inserted
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path, nargs="?", default=FIXTURES)
+    parser.add_argument(
+        "--dictionaries",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Apply enriched CSV dictionaries (default for release bundles).",
+    )
+    args = parser.parse_args()
     engine = database_engine()
     try:
-        counts = load_fixtures(engine, parser.parse_args().directory)
+        counts = load_fixtures(engine, args.directory, dictionaries=args.dictionaries)
     finally:
         engine.dispose()
     print(json.dumps(counts, ensure_ascii=False))

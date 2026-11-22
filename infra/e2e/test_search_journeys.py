@@ -192,7 +192,7 @@ def test_select_map_marker_then_species(page: Page, api: httpx.Client) -> None:
         )
         page.goto("/?years=2020")
         page.get_by_role("tab", name="Место", exact=True).click()
-        marker = page.locator(".leaflet-overlay-pane path.leaflet-interactive").nth(1)
+        marker = page.get_by_role("button", name="Раякоски", exact=True)
         marker.hover()
         expect(page.locator(".leaflet-tooltip")).to_contain_text("Раякоски")
         marker.click()

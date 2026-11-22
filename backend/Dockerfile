@@ -10,7 +10,7 @@ COPY backend/app/ backend/app/
 COPY contracts/schema.sql contracts/schema.sql
 COPY contracts/observation.schema.json contracts/export_columns.json contracts/
 COPY contracts/fixtures/ contracts/fixtures/
-COPY pipeline/load.py pipeline/load.py
+COPY pipeline/load.py pipeline/run.py pipeline/sections.py pipeline/anchor.py pipeline/flags.py pipeline/
 COPY pipeline/__init__.py pipeline/__init__.py
 COPY pipeline/ingest/ pipeline/ingest/
 COPY pipeline/normalize/ pipeline/normalize/

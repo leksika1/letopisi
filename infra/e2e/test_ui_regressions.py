@@ -106,6 +106,18 @@ def test_closing_exported_source_returns_to_first_search_page(
     expect(page.get_by_text(f"стр. 1 из {pages}", exact=True)).to_be_visible()
     expect(page.get_by_role("table").get_by_role("row").nth(1)).to_be_visible()
 
+    # Opening from the results table must keep its own pagination on close.
+    page.goto("/?page=2&page_size=25")
+    first = page.locator("tr[data-observation-id]").first
+    expect(first).to_be_visible()
+    selected = first.get_attribute("data-observation-id")
+    first.click()
+    expect(panel.get_by_text(f"Запись №{selected}", exact=True)).to_be_visible()
+    panel.get_by_role("button", name="Закрыть").click()
+    expect(panel).to_have_count(0)
+    assert parse_qs(urlsplit(page.url).query)["page"] == ["2"]
+    expect(first).to_have_attribute("data-observation-id", selected or "")
+
 
 def test_editor_can_correct_record_type_to_publication(
     page: Page, api: httpx.Client, e2e_database_url: str
@@ -133,7 +145,7 @@ def test_editor_can_correct_record_type_to_publication(
         ).locator("input").fill(title)
         panel.locator("label").filter(
             has=page.get_by_text("Год публикации", exact=True)
-        ).locator("input").fill(str(record["obs_year"]))
+        ).locator("input").fill(str(record["obs_year"] + 1))
         with page.expect_response(
             lambda r: r.url.endswith(endpoint) and r.request.method == "PATCH"
         ) as saved:
@@ -152,4 +164,20 @@ def test_editor_can_correct_record_type_to_publication(
             "publication",
             title,
         )
-        assert after["pub_year"] == record["obs_year"]
+        assert after["pub_year"] == after["obs_year"] == record["obs_year"] + 1
+        panel.get_by_role("button", name=re.compile("Исправить")).click()
+        panel.locator("label").filter(
+            has=page.get_by_text("Тип записи", exact=True)
+        ).locator("select").select_option("observation")
+        panel.locator("label").filter(
+            has=page.get_by_text("Год наблюдения", exact=True)
+        ).locator("input").fill(str(record["obs_year"]))
+        with page.expect_response(
+            lambda r: r.url.endswith(endpoint) and r.request.method == "PATCH"
+        ) as reverted:
+            panel.get_by_role("button", name=re.compile("Сохранить правку")).click()
+        assert reverted.value.status == 200, reverted.value.text()
+        restored = api.get(endpoint).json()["observation"]
+        assert restored["record_type"] == record["record_type"]
+        assert restored["object_type"] == record["object_type"]
+        assert restored["pub_title"] is None and restored["pub_year"] is None

@@ -14,6 +14,10 @@
 !contracts/fixtures/*.jsonl
 !pipeline/
 !pipeline/load.py
+!pipeline/run.py
+!pipeline/sections.py
+!pipeline/anchor.py
+!pipeline/flags.py
 !pipeline/__init__.py
 !pipeline/ingest/
 !pipeline/ingest/*.py
@@ -21,8 +25,8 @@
 !pipeline/normalize/
 !pipeline/normalize/*.py
 !pipeline/extract/
-!pipeline/extract/__init__.py
-!pipeline/extract/llm.py
-!pipeline/extract/prompt.py
+!pipeline/extract/*.py
+!pipeline/extract/tables/
+!pipeline/extract/tables/*.py
 !dictionaries/
 !dictionaries/*.csv

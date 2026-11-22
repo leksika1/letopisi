@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { Navigate, NavLink, Route, Routes, useParams, useSearchParams } from 'react-router-dom';
 import { useEditorName } from './lib/editor';
 import SearchPage from './pages/SearchPage';
 import ReviewPage from './pages/ReviewPage';
@@ -13,6 +13,16 @@ const NAV = [
   { to: '/documents', label: 'Документы' },
   { to: '/quality', label: 'Качество' },
 ];
+
+function SourceLink() {
+  const { id } = useParams();
+  const [params] = useSearchParams();
+  const search = new URLSearchParams(params);
+  // Exported links use page for the PDF. The search route uses it for the results list.
+  search.delete('page');
+  if (id) search.set('obs', id);
+  return <Navigate replace to={{ pathname: '/', search: search.toString() }} />;
+}
 
 export default function App() {
   const [editor, setEditor] = useEditorName();
@@ -56,7 +66,7 @@ export default function App() {
       <main className="mx-auto w-full max-w-[1600px] flex-1 px-4 py-4">
         <Routes>
           <Route path="/" element={<SearchPage />} />
-          <Route path="/observations/:id" element={<SearchPage />} />
+          <Route path="/observations/:id" element={<SourceLink />} />
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/saved" element={<SavedQueriesPage />} />
           <Route path="/documents" element={<DocumentsPage />} />

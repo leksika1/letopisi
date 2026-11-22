@@ -3,6 +3,7 @@
 import os
 import subprocess
 import sys
+import time
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -115,7 +116,17 @@ def test_duplicate_upload_race_then_seed_conflict(
         timeout=30,
     )
     assert seed.returncode != 0 and doc["filename"] in seed.stderr
-    assert api.get("/api/documents").json() == [doc]
+    deadline = time.monotonic() + 30
+    while True:
+        (finished,) = api.get("/api/documents").json()
+        if finished["status"] == "done":
+            break
+        assert (
+            finished["status"] in {"queued", "processing"}
+            and time.monotonic() < deadline
+        ), finished
+        time.sleep(0.1)
+    assert finished == {**doc, "status": "done", "error": None}
     assert api.get("/api/observations").json()["total"] == 0
 
 

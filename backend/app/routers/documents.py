@@ -1,5 +1,8 @@
+import asyncio
 import hashlib
 import os
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Annotated, Any
@@ -9,6 +12,7 @@ import pymupdf
 from fastapi import (
     APIRouter,
     BackgroundTasks,
+    FastAPI,
     File,
     Form,
     HTTPException,
@@ -21,12 +25,22 @@ from fastapi import Path as PathParam
 from fastapi.responses import FileResponse
 from sqlalchemy import Connection, text
 
-from pipeline.ingest import jobs
 from pipeline.ingest.pdf import catalog_book, has_text_layer, is_spread_scan
 
+from .. import jobs
 from ..db import ROOT
 
-router = APIRouter(prefix="/api/documents")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    recovery = asyncio.create_task(asyncio.to_thread(jobs.resume_uploads))
+    try:
+        yield
+    finally:
+        await recovery
+
+
+router = APIRouter(prefix="/api/documents", lifespan=lifespan)
 Id = Annotated[int, PathParam(ge=1)]
 MIME = {
     "pdf": "application/pdf",

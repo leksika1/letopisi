@@ -199,8 +199,9 @@ def api(
         yield proxy
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def browser() -> Iterator[Browser]:
+    # Close Playwright's sync event loop before pytest enters other test modules.
     with sync_playwright() as playwright:
         instance = playwright.chromium.launch(
             executable_path=os.getenv("E2E_CHROMIUM") or None

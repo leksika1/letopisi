@@ -16,7 +16,7 @@ files=(
     backend/Dockerfile backend/Dockerfile.dockerignore backend/requirements.txt
     backend/__init__.py backend/app/
     pipeline/__init__.py pipeline/load.py pipeline/ingest/
-    pipeline/normalize/ pipeline/extract/__init__.py pipeline/extract/llm.py pipeline/extract/prompt.py
+    pipeline/normalize/ pipeline/extract/ pipeline/run.py pipeline/sections.py pipeline/anchor.py pipeline/flags.py
     dictionaries/*.csv
     contracts/schema.sql contracts/fixtures/ contracts/observation.schema.json contracts/export_columns.json
     infra/docker-compose.yml infra/frontend.Dockerfile infra/frontend.Dockerfile.dockerignore
