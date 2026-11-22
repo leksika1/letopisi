@@ -23,6 +23,7 @@ from pipeline.normalize.phenophases import code_to_id, match_phenophase
 from pipeline.normalize.places import match_place
 from pipeline.normalize.taxa import match_taxon, taxon_group
 
+from .consistency import enforce
 from .prompt import PROMPT_VERSION, LLMRecord
 from .tables.common import Draft
 
@@ -201,4 +202,4 @@ def build(d: Draft, chunk: dict, dc: DocContext, obs_id: int) -> dict:
     obs["flags"] = flags
     obs["confidence"] = confidence(d.strategy, flags, fuzzy_anchor=a.method == "fuzzy", observers_from_section=from_section)
     obs["note"] = " ".join(n for n in notes if n) or None
-    return obs
+    return enforce(obs)
