@@ -1,0 +1,2076 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://letopisi.local/contracts/observation.schema.json",
+  "title": "Observation",
+  "description": "Запись наблюдения, извлечённая из летописи природы. Источник правды: docs/SPEC.md, раздел «Модель записи». Значения, которых нет в тексте, — null (не додумываются).",
+  "$ref": "#/$defs/Observation",
+  "$defs": {
+    "Id": {
+      "description": "Целочисленный идентификатор (bigint в БД).",
+      "type": "integer",
+      "minimum": 1
+    },
+    "NullableId": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "IsoDate": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "RecordType": {
+      "description": "observation — наблюдение вида/явления; env_measurement — погода, вода, снег; publication — публикация (библиография, раздел «Научные исследования»).",
+      "type": "string",
+      "enum": [
+        "observation",
+        "env_measurement",
+        "publication"
+      ]
+    },
+    "ObjectType": {
+      "type": "string",
+      "enum": [
+        "taxon",
+        "phenomenon",
+        "env_indicator",
+        "publication"
+      ]
+    },
+    "DatePrecision": {
+      "description": "Точность даты. null — даты нет (например, у публикации).",
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "day",
+        "decade",
+        "month",
+        "season",
+        "year",
+        "range",
+        null
+      ]
+    },
+    "Status": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "verified",
+        "edited",
+        "rejected"
+      ]
+    },
+    "Flag": {
+      "type": "string",
+      "enum": [
+        "quote_not_found",
+        "value_not_in_quote",
+        "date_not_in_quote",
+        "date_ambiguous",
+        "taxon_unmatched",
+        "taxon_ambiguous",
+        "place_unmatched",
+        "person_unmatched",
+        "year_outside_book",
+        "low_ocr",
+        "table_parse_uncertain"
+      ]
+    },
+    "TaxonGroup": {
+      "type": "string",
+      "enum": [
+        "сосудистые растения",
+        "мхи",
+        "лишайники",
+        "грибы",
+        "птицы",
+        "млекопитающие",
+        "рыбы",
+        "амфибии и рептилии",
+        "насекомые",
+        "прочие беспозвоночные"
+      ]
+    },
+    "BBox": {
+      "description": "Прямоугольник [x0, y0, x1, y1] в долях ширины/высоты страницы PDF (0..1), начало координат — левый верхний угол. Для сканов-разворотов — доли всей страницы-разворота.",
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "Locator": {
+      "description": "Положение фрагмента в исходном документе. Вариант зависит от формата документа.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/PdfLocator"
+        },
+        {
+          "$ref": "#/$defs/DocxParaLocator"
+        },
+        {
+          "$ref": "#/$defs/DocxTableLocator"
+        },
+        {
+          "$ref": "#/$defs/XlsxLocator"
+        }
+      ]
+    },
+    "PdfLocator": {
+      "type": "object",
+      "properties": {
+        "pdf_page": {
+          "description": "Номер страницы PDF, с 1. null — не удалось определить.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "half": {
+          "description": "Половина разворота для сканов (L/R); null — страница не разворот или фрагмент на обеих половинах.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "L",
+            "R",
+            null
+          ]
+        },
+        "printed_page": {
+          "description": "Печатный номер страницы книги, как напечатан (строка; может быть диапазоном «76-77»).",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "pdf_page",
+        "half",
+        "printed_page"
+      ],
+      "additionalProperties": false
+    },
+    "DocxParaLocator": {
+      "type": "object",
+      "properties": {
+        "para": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "para"
+      ],
+      "additionalProperties": false
+    },
+    "DocxTableLocator": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "row": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "table",
+        "row"
+      ],
+      "additionalProperties": false
+    },
+    "XlsxLocator": {
+      "type": "object",
+      "properties": {
+        "sheet": {
+          "type": "string"
+        },
+        "row": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "sheet",
+        "row"
+      ],
+      "additionalProperties": false
+    },
+    "ObservationCore": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "record_type": {
+          "$ref": "#/$defs/RecordType"
+        },
+        "object_type": {
+          "$ref": "#/$defs/ObjectType"
+        },
+        "object_raw": {
+          "description": "Объект как в тексте (название вида, явления, показателя, заголовок публикации).",
+          "type": "string",
+          "minLength": 1
+        },
+        "taxon_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "date_raw": {
+          "description": "Дата как в тексте.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "date_from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "date_to": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "date_precision": {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        "obs_year": {
+          "description": "Год наблюдения (может отличаться от года книги). Для публикаций — год публикации.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "toponym_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "place_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "coords_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "habitat_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_raw": {
+          "description": "«Характер явления, наблюдения».",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phenophase_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "phenophase_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "indicator": {
+          "description": "Что измеряли (например «следов на 10 км маршрута», «высота снега»).",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value_num": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "value_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "observers_raw": {
+          "description": "Наблюдатели как в тексте.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "person_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "uniqueItems": true
+        },
+        "pub_authors": {
+          "description": "Только для record_type=publication: авторы как в тексте.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pub_year": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "pub_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pub_venue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "document_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "section_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "chunk_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "locator": {
+          "$ref": "#/$defs/Locator"
+        },
+        "printed_pages": {
+          "description": "Ссылка на страницу/-цы как в шаблоне: «76-77», «71».",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quote": {
+          "description": "Дословная цитата из text соответствующего chunk.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quote_span": {
+          "description": "[start, end) — смещения quote в chunk.text (в символах Unicode, end не включается): chunk.text[start:end] == quote.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "bboxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BBox"
+          }
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Flag"
+          },
+          "uniqueItems": true
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "extractor_version": {
+          "type": "string"
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "record_type",
+        "object_type",
+        "object_raw",
+        "taxon_id",
+        "date_raw",
+        "date_from",
+        "date_to",
+        "date_precision",
+        "obs_year",
+        "toponym_raw",
+        "place_id",
+        "coords_raw",
+        "habitat_raw",
+        "event_raw",
+        "phenophase_id",
+        "phenophase_raw",
+        "indicator",
+        "value_num",
+        "value_raw",
+        "unit",
+        "observers_raw",
+        "person_ids",
+        "pub_authors",
+        "pub_year",
+        "pub_title",
+        "pub_venue",
+        "document_id",
+        "section_id",
+        "chunk_id",
+        "locator",
+        "printed_pages",
+        "quote",
+        "quote_span",
+        "bboxes",
+        "note",
+        "confidence",
+        "flags",
+        "status",
+        "extractor_version"
+      ],
+      "description": "Поля записи наблюдения (без ограничения лишних полей; используется через allOf)."
+    },
+    "Observation": {
+      "description": "Запись наблюдения (строка таблицы observations + person_ids из observation_persons).",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/ObservationCore"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ObservationLabels": {
+      "description": "Человекочитаемые подписи, которые API добавляет к записи в списке (вычисляются джойнами, в БД не хранятся).",
+      "type": "object",
+      "properties": {
+        "taxon_name_ru": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "taxon_name_lat": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "taxon_group": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TaxonGroup"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "place_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phenophase_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phenophase_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "persons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "document_title": {
+          "type": "string"
+        },
+        "book_no": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "book_year": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "taxon_name_ru",
+        "taxon_name_lat",
+        "taxon_group",
+        "place_name",
+        "phenophase_code",
+        "phenophase_name",
+        "persons",
+        "document_title",
+        "book_no",
+        "book_year"
+      ],
+      "additionalProperties": false
+    },
+    "ObservationListItem": {
+      "description": "Элемент списка GET /observations: запись + подписи.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/ObservationCore"
+        }
+      ],
+      "properties": {
+        "labels": {
+          "$ref": "#/$defs/ObservationLabels"
+        }
+      },
+      "required": [
+        "labels"
+      ],
+      "unevaluatedProperties": false
+    },
+    "ObservationEditableFields": {
+      "description": "Поля, которые можно менять через PATCH /observations/{id}. Источник (document_id, chunk_id, locator, quote_span), status и служебные поля меняет только сервер.",
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "$ref": "#/$defs/RecordType"
+        },
+        "object_type": {
+          "$ref": "#/$defs/ObjectType"
+        },
+        "object_raw": {
+          "type": "string",
+          "minLength": 1
+        },
+        "taxon_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "date_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "date_from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "date_to": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "date_precision": {
+          "$ref": "#/$defs/DatePrecision"
+        },
+        "obs_year": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "toponym_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "place_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "coords_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "habitat_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phenophase_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "phenophase_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "indicator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value_num": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "value_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "observers_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "person_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "uniqueItems": true
+        },
+        "pub_authors": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pub_year": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "pub_title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pub_venue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "printed_pages": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Flag"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "ObservationPatch": {
+      "description": "Тело PATCH /observations/{id}. action=edit → status=edited; verify → verified (fields можно не передавать); reject → rejected.",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "$ref": "#/$defs/ObservationEditableFields"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "edit",
+            "verify",
+            "reject"
+          ]
+        },
+        "editor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "action",
+        "editor"
+      ],
+      "additionalProperties": false
+    },
+    "FieldChange": {
+      "type": "object",
+      "properties": {
+        "old": {},
+        "new": {}
+      },
+      "required": [
+        "old",
+        "new"
+      ],
+      "additionalProperties": false
+    },
+    "ObservationEdit": {
+      "description": "Запись журнала правок (таблица observation_edits).",
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "observation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "edit",
+            "verify",
+            "reject"
+          ]
+        },
+        "editor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "changes": {
+          "description": "Изменённые поля: {имя_поля: {old, new}}. Для verify/reject — пустой объект.",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/EditableFieldName"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/FieldChange"
+          }
+        },
+        "status_before": {
+          "$ref": "#/$defs/Status"
+        },
+        "status_after": {
+          "$ref": "#/$defs/Status"
+        },
+        "comment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "observation_id",
+        "action",
+        "editor",
+        "changes",
+        "status_before",
+        "status_after",
+        "comment",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "EditableFieldName": {
+      "type": "string",
+      "enum": [
+        "record_type",
+        "object_type",
+        "object_raw",
+        "taxon_id",
+        "date_raw",
+        "date_from",
+        "date_to",
+        "date_precision",
+        "obs_year",
+        "toponym_raw",
+        "place_id",
+        "coords_raw",
+        "habitat_raw",
+        "event_raw",
+        "phenophase_id",
+        "phenophase_raw",
+        "indicator",
+        "value_num",
+        "value_raw",
+        "unit",
+        "observers_raw",
+        "person_ids",
+        "pub_authors",
+        "pub_year",
+        "pub_title",
+        "pub_venue",
+        "printed_pages",
+        "note",
+        "flags"
+      ]
+    },
+    "DocumentFormat": {
+      "type": "string",
+      "enum": [
+        "pdf",
+        "docx",
+        "xlsx"
+      ]
+    },
+    "DocumentStatus": {
+      "description": "queued — загружен, ждёт обработки; processing; done; failed — ошибка; unsupported — формат/содержимое не поддерживается.",
+      "type": "string",
+      "enum": [
+        "queued",
+        "processing",
+        "done",
+        "failed",
+        "unsupported"
+      ]
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "book_no": {
+          "description": "Номер книги (тома) летописи; null для документов вне серии (например xlsx с параметрами).",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "year": {
+          "description": "Год, за который составлена книга.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "filename": {
+          "description": "Имя файла в data/raw.",
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/DocumentFormat"
+        },
+        "pages": {
+          "description": "Число страниц PDF; null для docx/xlsx.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "has_text_layer": {
+          "type": "boolean"
+        },
+        "layout": {
+          "description": "single — одна страница книги на страницу PDF; spread — разворот из двух страниц.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "single",
+            "spread",
+            null
+          ]
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "status": {
+          "$ref": "#/$defs/DocumentStatus"
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "book_no",
+        "year",
+        "filename",
+        "format",
+        "pages",
+        "has_text_layer",
+        "layout",
+        "sha256",
+        "status",
+        "error"
+      ],
+      "additionalProperties": false
+    },
+    "Section": {
+      "description": "Раздел документа (по оглавлению).",
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "document_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parent_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "code": {
+          "description": "Номер раздела как в оглавлении («7.3»); null для ненумерованных («Библиографический список»).",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pdf_page_from": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "pdf_page_to": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "document_id",
+        "parent_id",
+        "code",
+        "title",
+        "pdf_page_from",
+        "pdf_page_to"
+      ],
+      "additionalProperties": false
+    },
+    "ChunkKind": {
+      "type": "string",
+      "enum": [
+        "page",
+        "paragraph",
+        "table",
+        "table_row",
+        "list",
+        "caption",
+        "bibliography_entry"
+      ]
+    },
+    "TextSource": {
+      "description": "Откуда текст: text_layer — текстовый слой PDF/DOCX/XLSX; ocr — распознавание скана; manual — ручная расшифровка (эталон).",
+      "type": "string",
+      "enum": [
+        "text_layer",
+        "ocr",
+        "manual"
+      ]
+    },
+    "Chunk": {
+      "description": "Фрагмент текста документа, на который ссылаются записи. quote записи — подстрока text.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "document_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "section_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "ord": {
+          "description": "Порядковый номер фрагмента в документе.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "$ref": "#/$defs/ChunkKind"
+        },
+        "locator": {
+          "$ref": "#/$defs/Locator"
+        },
+        "text": {
+          "type": "string"
+        },
+        "text_source": {
+          "$ref": "#/$defs/TextSource"
+        },
+        "ocr_confidence": {
+          "description": "Средняя уверенность OCR 0..1; null если текст не из OCR.",
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "id",
+        "document_id",
+        "section_id",
+        "ord",
+        "kind",
+        "locator",
+        "text",
+        "text_source",
+        "ocr_confidence"
+      ],
+      "additionalProperties": false
+    },
+    "Taxon": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name_lat": {
+          "description": "Принятое латинское название (без автора).",
+          "type": "string",
+          "minLength": 1
+        },
+        "name_ru": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rank": {
+          "type": "string",
+          "enum": [
+            "species",
+            "subspecies",
+            "genus",
+            "family",
+            "order",
+            "class"
+          ]
+        },
+        "genus": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "order": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "class": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "group_ru": {
+          "$ref": "#/$defs/TaxonGroup"
+        },
+        "gbif_key": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name_lat",
+        "name_ru",
+        "rank",
+        "genus",
+        "family",
+        "order",
+        "class",
+        "group_ru",
+        "gbif_key"
+      ],
+      "additionalProperties": false
+    },
+    "TaxonName": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "taxon_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lang": {
+          "type": "string",
+          "enum": [
+            "ru",
+            "lat"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "synonym",
+            "variant"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "taxon_id",
+        "name",
+        "lang",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "CoordsSource": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "manual_approx",
+        "gazetteer",
+        "document",
+        null
+      ]
+    },
+    "Place": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "description": "Категория как в каталоге топонимов.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lat": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lon": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180
+        },
+        "coords_source": {
+          "$ref": "#/$defs/CoordsSource"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category",
+        "lat",
+        "lon",
+        "coords_source"
+      ],
+      "additionalProperties": false
+    },
+    "PlaceName": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "place_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "variant"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "place_id",
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "Person": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "surname": {
+          "type": "string",
+          "minLength": 1
+        },
+        "initials": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "full_raw": {
+          "description": "Как в каталоге сотрудников / в тексте.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "years_active": {
+          "description": "Годы из колонки «Год работы» каталога сотрудников.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "uniqueItems": true
+        },
+        "year_start": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "year_end": {
+          "description": "null — не указано; для «настоящее время» — null и still_working=true.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "still_working": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "surname",
+        "initials",
+        "full_raw",
+        "years_active",
+        "year_start",
+        "year_end",
+        "still_working"
+      ],
+      "additionalProperties": false
+    },
+    "Phenophase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "code": {
+          "description": "Код: '1'..'16', '10а', '10б' (кириллица) для растений; латинские слаги для животных (arrival, first_song …).",
+          "type": "string",
+          "minLength": 1
+        },
+        "name_ru": {
+          "description": "null — название кода не найдено в источнике.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "applies_to": {
+          "type": "string",
+          "enum": [
+            "plants",
+            "animals"
+          ]
+        },
+        "bbch": {
+          "description": "Международный код BBCH из легенды книги 2020 (только растения).",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ord": {
+          "description": "Порядок в шкале.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "name_ru",
+        "applies_to",
+        "bbch",
+        "ord"
+      ],
+      "additionalProperties": false
+    },
+    "SortField": {
+      "type": "string",
+      "enum": [
+        "date_from",
+        "obs_year",
+        "object_raw",
+        "toponym_raw",
+        "confidence",
+        "status",
+        "id",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "SearchFilters": {
+      "description": "Фильтры поиска. Те же имена, что у query-параметров GET /observations и /export; массивы в query передаются через запятую. Все поля необязательны; несколько полей объединяются по И, значения внутри массива — по ИЛИ.",
+      "type": "object",
+      "properties": {
+        "q": {
+          "description": "Свободный текст (trgm по object_raw, quote, toponym_raw, event_raw).",
+          "type": "string"
+        },
+        "taxon_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "taxon": {
+          "description": "Название вида строкой: рус./лат./синоним/род (через taxon_names; род включает все виды рода).",
+          "type": "string"
+        },
+        "group": {
+          "$ref": "#/$defs/TaxonGroup"
+        },
+        "person": {
+          "description": "Фамилии наблюдателей (ИЛИ).",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "place_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "place": {
+          "type": "string"
+        },
+        "phenophase_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "indicator": {
+          "type": "string"
+        },
+        "record_type": {
+          "$ref": "#/$defs/RecordType"
+        },
+        "document_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "date_from": {
+          "description": "Запись попадает, если её интервал [date_from, date_to] пересекается с заданным.",
+          "$ref": "#/$defs/IsoDate"
+        },
+        "date_to": {
+          "$ref": "#/$defs/IsoDate"
+        },
+        "years": {
+          "description": "Годы наблюдения (obs_year), ИЛИ.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1
+        },
+        "doc_years": {
+          "description": "Годы книг (documents.year), ИЛИ. Расширение SPEC — см. README «Решения».",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "flagged": {
+          "description": "true — только записи с непустыми flags; false — только без флагов.",
+          "type": "boolean"
+        },
+        "sort": {
+          "$ref": "#/$defs/SortField"
+        },
+        "order": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "SavedQuery": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "description": "Исходная формулировка запроса обычными словами (если есть).",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filters": {
+          "$ref": "#/$defs/SearchFilters"
+        },
+        "created_at": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "text",
+        "filters"
+      ],
+      "additionalProperties": false
+    },
+    "SavedQueryCreate": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filters": {
+          "$ref": "#/$defs/SearchFilters"
+        }
+      },
+      "required": [
+        "name",
+        "filters"
+      ],
+      "additionalProperties": false
+    },
+    "QueryParseRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "QueryParseResponse": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "$ref": "#/$defs/SearchFilters"
+        },
+        "explanation": {
+          "description": "Как понят запрос, по-русски («вид: лось (Alces alces); годы: 1995, 1996, 2020; сортировка по дате»).",
+          "type": "string"
+        },
+        "warnings": {
+          "description": "Что не удалось распознать или что заменено (например «2022 → 2020: книги за 2022 нет»).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "filters",
+        "explanation",
+        "warnings"
+      ],
+      "additionalProperties": false
+    },
+    "PhenologyRow": {
+      "type": "object",
+      "properties": {
+        "taxon_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "phenophase_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "phenophase_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phenophase_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year": {
+          "type": "integer"
+        },
+        "date_from": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "date_to": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observation_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "taxon_id",
+        "phenophase_id",
+        "phenophase_code",
+        "phenophase_name",
+        "year",
+        "date_from",
+        "date_to",
+        "observation_id"
+      ],
+      "additionalProperties": false
+    },
+    "PlaceSpeciesItem": {
+      "type": "object",
+      "properties": {
+        "taxon_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name_ru": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name_lat": {
+          "type": "string"
+        },
+        "group_ru": {
+          "$ref": "#/$defs/TaxonGroup"
+        },
+        "n_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "first_date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IsoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "taxon_id",
+        "name_ru",
+        "name_lat",
+        "group_ru",
+        "n_records",
+        "first_date",
+        "last_date"
+      ],
+      "additionalProperties": false
+    },
+    "PlaceSpecies": {
+      "type": "object",
+      "properties": {
+        "place": {
+          "$ref": "#/$defs/Place"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PlaceSpeciesItem"
+          }
+        }
+      },
+      "required": [
+        "place",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "SuggestItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "label": {
+          "type": "string"
+        },
+        "sublabel": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "sublabel"
+      ],
+      "additionalProperties": false
+    },
+    "FieldMetric": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "precision": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "recall": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "f1": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "n": {
+          "description": "Число эталонных значений поля.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "field",
+        "precision",
+        "recall",
+        "f1",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+    "QualityErrorExample": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "missed",
+            "spurious",
+            "wrong_value"
+          ]
+        },
+        "field": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "document_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "pdf_page": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "observation_id": {
+          "$ref": "#/$defs/NullableId"
+        },
+        "expected": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "actual": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quote": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "comment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "field",
+        "document_id",
+        "pdf_page",
+        "observation_id",
+        "expected",
+        "actual",
+        "quote",
+        "comment"
+      ],
+      "additionalProperties": false
+    },
+    "UnsupportedPage": {
+      "type": "object",
+      "properties": {
+        "document_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "pdf_page": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "no_text_layer",
+            "low_ocr",
+            "image_only",
+            "handwritten",
+            "table_too_complex",
+            "unsupported_format",
+            "other"
+          ]
+        },
+        "comment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "document_id",
+        "pdf_page",
+        "reason",
+        "comment"
+      ],
+      "additionalProperties": false
+    },
+    "Quality": {
+      "description": "Ответ GET /quality: метрики по эталону gold/.",
+      "type": "object",
+      "properties": {
+        "generated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "gold_version": {
+          "type": "string"
+        },
+        "extractor_version": {
+          "type": "string"
+        },
+        "is_placeholder": {
+          "description": "true — числа ненастоящие (пример структуры).",
+          "type": "boolean"
+        },
+        "n_gold_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_extracted_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "record_level": {
+          "$ref": "#/$defs/FieldMetric"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FieldMetric"
+          }
+        },
+        "by_document": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "record_level": {
+                "$ref": "#/$defs/FieldMetric"
+              }
+            },
+            "required": [
+              "document_id",
+              "record_level"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "error_examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QualityErrorExample"
+          }
+        },
+        "unsupported": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/UnsupportedPage"
+          }
+        }
+      },
+      "required": [
+        "generated_at",
+        "gold_version",
+        "extractor_version",
+        "is_placeholder",
+        "n_gold_records",
+        "n_extracted_records",
+        "record_level",
+        "fields",
+        "by_document",
+        "error_examples",
+        "unsupported"
+      ],
+      "additionalProperties": false
+    },
+    "ExportColumn": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rule": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "header",
+        "source",
+        "rule"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

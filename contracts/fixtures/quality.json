@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-11-22T12:00:00Z",
+  "gold_version": "gold-placeholder",
+  "extractor_version": "fixture-1.0",
+  "is_placeholder": true,
+  "n_gold_records": 0,
+  "n_extracted_records": 38,
+  "record_level": {
+    "field": "record",
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "n": 0
+  },
+  "fields": [
+    {
+      "field": "object_raw",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "taxon_id",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "date_from",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "obs_year",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "toponym_raw",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "place_id",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "habitat_raw",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "event_raw",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "phenophase_id",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "value_num",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "observers_raw",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    },
+    {
+      "field": "printed_pages",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n": 0
+    }
+  ],
+  "by_document": [
+    {
+      "document_id": 1,
+      "record_level": {
+        "field": "record",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n": 0
+      }
+    },
+    {
+      "document_id": 2,
+      "record_level": {
+        "field": "record",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n": 0
+      }
+    },
+    {
+      "document_id": 3,
+      "record_level": {
+        "field": "record",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "n": 0
+      }
+    }
+  ],
+  "error_examples": [
+    {
+      "kind": "wrong_value",
+      "field": "date_from",
+      "document_id": 3,
+      "pdf_page": 76,
+      "observation_id": 6,
+      "expected": "2020-06-23",
+      "actual": "2020-06-13",
+      "quote": "Долина ручья с березово-ивовым лесом \nGeranium sylvaticum  \n(Герань лесная) \n01.06 \n03.06 \n15.06 \n13.06 \n23.06 \n03.07 \n",
+      "comment": "placeholder: сдвиг столбца в таблице, где ячейки идут столбиком"
+    },
+    {
+      "kind": "spurious",
+      "field": "value_num",
+      "document_id": 3,
+      "pdf_page": 500,
+      "observation_id": 30,
+      "expected": null,
+      "actual": "3.17",
+      "quote": null,
+      "comment": "placeholder: значение не из цитаты (флаг value_not_in_quote)"
+    },
+    {
+      "kind": "missed",
+      "field": null,
+      "document_id": 1,
+      "pdf_page": 40,
+      "observation_id": null,
+      "expected": "Лисица, маршрут 1: 3.33 следов/10 км",
+      "actual": null,
+      "quote": "Лисица | 4 | 3.33 | 3 | 3.0",
+      "comment": "placeholder"
+    }
+  ],
+  "unsupported": [
+    {
+      "document_id": 2,
+      "pdf_page": null,
+      "reason": "no_text_layer",
+      "comment": "placeholder: скан без текстового слоя, OCR ещё не выполнен"
+    },
+    {
+      "document_id": 3,
+      "pdf_page": 1,
+      "reason": "image_only",
+      "comment": "placeholder: обложка без текста"
+    }
+  ]
+}

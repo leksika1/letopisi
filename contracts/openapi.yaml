@@ -1,0 +1,657 @@
+openapi: 3.1.0
+info:
+  title: Цифровые Летописи природы — API
+  version: 1.0.0
+  description: |
+    API веб-сервиса «Цифровые Летописи природы» (заповедник «Пасвик»).
+    Источник правды — docs/SPEC.md. Все схемы данных определены в observation.schema.json
+    (JSON Schema 2020-12) и подключаются отсюда через $ref — не дублируйте их.
+
+    Соглашения:
+    - Все пути — с префиксом /api.
+    - Даты — ISO 8601 (YYYY-MM-DD), отметки времени — RFC 3339 в UTC.
+    - Массивы в query-параметрах передаются через запятую: `years=1995,1996,2020`.
+    - Значения, которых нет в источнике, — `null` (поле присутствует).
+    - Ошибки — объект Error с HTTP-кодом 400/404/409/413/415/422/500.
+    - По умолчанию GET /observations и GET /export не возвращают записи со status=rejected;
+      чтобы получить их, передайте status=rejected явно.
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+servers:
+  - url: http://localhost:8000/api
+    description: локальная разработка
+tags:
+  - name: system
+  - name: observations
+  - name: search
+  - name: export
+  - name: analytics
+  - name: dictionaries
+  - name: documents
+  - name: saved-queries
+  - name: quality
+
+paths:
+  /health:
+    get:
+      tags: [system]
+      operationId: getHealth
+      summary: Проверка работоспособности
+      responses:
+        '200':
+          description: Сервис работает
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+
+  /observations:
+    get:
+      tags: [observations]
+      operationId: listObservations
+      summary: Поиск записей с фильтрами и пагинацией
+      parameters:
+        - $ref: '#/components/parameters/q'
+        - $ref: '#/components/parameters/taxon_id'
+        - $ref: '#/components/parameters/taxon'
+        - $ref: '#/components/parameters/group'
+        - $ref: '#/components/parameters/person'
+        - $ref: '#/components/parameters/place_id'
+        - $ref: '#/components/parameters/place'
+        - $ref: '#/components/parameters/phenophase_id'
+        - $ref: '#/components/parameters/indicator'
+        - $ref: '#/components/parameters/record_type'
+        - $ref: '#/components/parameters/document_id'
+        - $ref: '#/components/parameters/date_from'
+        - $ref: '#/components/parameters/date_to'
+        - $ref: '#/components/parameters/years'
+        - $ref: '#/components/parameters/doc_years'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/flagged'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/order'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          description: Страница результатов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationPage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /observations/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idPath'
+    get:
+      tags: [observations]
+      operationId: getObservation
+      summary: Запись с исходным фрагментом, разделом, документом и историей правок
+      responses:
+        '200':
+          description: Запись
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [observations]
+      operationId: patchObservation
+      summary: Правка, подтверждение или отклонение записи
+      description: |
+        action=edit — меняет переданные fields, status → edited;
+        action=verify — status → verified (fields, если переданы, тоже применяются);
+        action=reject — status → rejected.
+        Каждый вызов пишет одну строку в observation_edits (changes = {поле: {old, new}}).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObservationPatch'
+            examples:
+              edit:
+                value:
+                  action: edit
+                  editor: Поликарпова Н.В.
+                  fields: {date_raw: '23.06', date_from: '2020-06-23', date_to: '2020-06-23'}
+                  comment: Сдвиг столбца в таблице 7.11
+              verify:
+                value: {action: verify, editor: Поликарпова Н.В.}
+      responses:
+        '200':
+          description: Обновлённая запись
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /query/parse:
+    post:
+      tags: [search]
+      operationId: parseQuery
+      summary: Разбор запроса обычными словами в фильтры
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryParseRequest'
+            example:
+              text: Все наблюдения за лосем в 1995, 1996 и 2022 годах по хронологии
+      responses:
+        '200':
+          description: Фильтры и пояснение
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryParseResponse'
+              example:
+                filters: {taxon_id: 16, years: [1995, 1996, 2020], record_type: observation, sort: date_from, order: asc}
+                explanation: 'вид: лось (Alces alces); годы наблюдения: 1995, 1996, 2020; сортировка по дате'
+                warnings: ['2022 → 2020: книги за 2022 год нет, использован том 2020 года']
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /export:
+    get:
+      tags: [export]
+      operationId: exportObservations
+      summary: Выгрузка найденных записей в XLSX или CSV
+      description: |
+        Колонки и правила форматирования — contracts/export_columns.json (13 колонок шаблона
+        + «Источник (ссылка)» + «Достоверность»). CSV — UTF-8 с BOM, разделитель «;».
+        Пагинации нет: выгружаются все записи по фильтрам.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          schema: {type: string, enum: [xlsx, csv]}
+        - $ref: '#/components/parameters/q'
+        - $ref: '#/components/parameters/taxon_id'
+        - $ref: '#/components/parameters/taxon'
+        - $ref: '#/components/parameters/group'
+        - $ref: '#/components/parameters/person'
+        - $ref: '#/components/parameters/place_id'
+        - $ref: '#/components/parameters/place'
+        - $ref: '#/components/parameters/phenophase_id'
+        - $ref: '#/components/parameters/indicator'
+        - $ref: '#/components/parameters/record_type'
+        - $ref: '#/components/parameters/document_id'
+        - $ref: '#/components/parameters/date_from'
+        - $ref: '#/components/parameters/date_to'
+        - $ref: '#/components/parameters/years'
+        - $ref: '#/components/parameters/doc_years'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/flagged'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: Файл выгрузки
+          headers:
+            Content-Disposition:
+              schema: {type: string}
+              description: attachment; filename="letopisi_export_<YYYYMMDD_HHMMSS>.<format>"
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: {type: string, contentMediaType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}
+            text/csv:
+              schema: {type: string}
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /phenology:
+    get:
+      tags: [analytics]
+      operationId: getPhenology
+      summary: Даты фенофаз вида по годам
+      parameters:
+        - name: taxon_id
+          in: query
+          required: true
+          schema: {$ref: '#/components/schemas/Id'}
+        - name: phenophase_id
+          in: query
+          required: false
+          schema: {$ref: '#/components/schemas/Id'}
+        - $ref: '#/components/parameters/years'
+      responses:
+        '200':
+          description: Строки (фенофаза, год, даты, ссылка на запись), сортировка по phenophase ord, year
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/PhenologyRow'}
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /places/{id}/species:
+    parameters:
+      - $ref: '#/components/parameters/idPath'
+    get:
+      tags: [analytics]
+      operationId: getPlaceSpecies
+      summary: Виды, отмеченные в месте
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema: {type: integer}
+        - $ref: '#/components/parameters/group'
+      responses:
+        '200':
+          description: Место (с координатами, если есть) и список видов с числом записей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceSpecies'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /suggest/{kind}:
+    get:
+      tags: [dictionaries]
+      operationId: suggest
+      summary: Подсказки для полей фильтров (pg_trgm)
+      parameters:
+        - name: kind
+          in: path
+          required: true
+          schema: {type: string, enum: [taxa, places, persons, phenophases]}
+        - name: q
+          in: query
+          required: true
+          schema: {type: string, minLength: 1}
+        - name: limit
+          in: query
+          required: false
+          schema: {type: integer, minimum: 1, maximum: 50, default: 10}
+      responses:
+        '200':
+          description: |
+            Подсказки. taxa: label = name_ru, sublabel = name_lat; places: label = name, sublabel = category;
+            persons: label = surname + initials, sublabel = годы работы; phenophases: label = «<code> — <name_ru>», sublabel = applies_to.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/SuggestItem'}
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /documents:
+    get:
+      tags: [documents]
+      operationId: listDocuments
+      summary: Список документов
+      responses:
+        '200':
+          description: Документы
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Document'}
+    post:
+      tags: [documents]
+      operationId: uploadDocument
+      summary: Загрузка нового документа (ставится в очередь на обработку)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  contentMediaType: application/octet-stream
+                  description: PDF, DOCX или XLSX
+                year: {type: integer, minimum: 1800, maximum: 2100}
+                title: {type: string, minLength: 1}
+                book_no: {type: integer, minimum: 1}
+              required: [file, year, title]
+      responses:
+        '201':
+          description: Документ создан, status = queued (или unsupported, если формат не поддерживается)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Document'}
+        '409':
+          description: Документ с таким sha256 уже загружен
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}
+        '413':
+          description: Файл слишком большой
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}
+        '415':
+          description: Неподдерживаемый тип файла
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /documents/{id}/file:
+    parameters:
+      - $ref: '#/components/parameters/idPath'
+    get:
+      tags: [documents]
+      operationId: getDocumentFile
+      summary: Оригинальный файл
+      responses:
+        '200':
+          description: Файл как загружен
+          content:
+            application/pdf:
+              schema: {type: string, contentMediaType: application/pdf}
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema: {type: string}
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: {type: string}
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /documents/{id}/pages/{n}.png:
+    parameters:
+      - $ref: '#/components/parameters/idPath'
+      - name: n
+        in: path
+        required: true
+        description: Номер страницы PDF (с 1). Для сканов — вся страница-разворот.
+        schema: {type: integer, minimum: 1}
+    get:
+      tags: [documents]
+      operationId: getDocumentPage
+      summary: Картинка страницы PDF
+      parameters:
+        - name: dpi
+          in: query
+          required: false
+          schema: {type: integer, minimum: 50, maximum: 300, default: 110}
+      responses:
+        '200':
+          description: PNG; bboxes записей накладываются на клиенте (доли 0..1 от размеров картинки)
+          content:
+            image/png:
+              schema: {type: string, contentMediaType: image/png}
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /saved-queries:
+    get:
+      tags: [saved-queries]
+      operationId: listSavedQueries
+      summary: Сохранённые запросы
+      responses:
+        '200':
+          description: Список
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/SavedQuery'}
+    post:
+      tags: [saved-queries]
+      operationId: createSavedQuery
+      summary: Сохранить запрос
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/SavedQueryCreate'}
+      responses:
+        '201':
+          description: Сохранено
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/SavedQuery'}
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /saved-queries/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idPath'
+    delete:
+      tags: [saved-queries]
+      operationId: deleteSavedQuery
+      summary: Удалить сохранённый запрос
+      responses:
+        '204':
+          description: Удалено
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /quality:
+    get:
+      tags: [quality]
+      operationId: getQuality
+      summary: Метрики качества извлечения по эталону
+      parameters:
+        - $ref: '#/components/parameters/document_id'
+      responses:
+        '200':
+          description: Метрики по полям, примеры ошибок, неподдерживаемые страницы
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Quality'}
+
+components:
+  parameters:
+    idPath:
+      name: id
+      in: path
+      required: true
+      schema: {$ref: '#/components/schemas/Id'}
+    q:
+      name: q
+      in: query
+      description: Свободный текст (trgm по object_raw, quote, toponym_raw, event_raw)
+      schema: {type: string}
+    taxon_id:
+      name: taxon_id
+      in: query
+      schema: {$ref: '#/components/schemas/Id'}
+    taxon:
+      name: taxon
+      in: query
+      description: Название вида строкой (рус./лат./синоним/род)
+      schema: {type: string}
+    group:
+      name: group
+      in: query
+      schema: {$ref: '#/components/schemas/TaxonGroup'}
+    person:
+      name: person
+      in: query
+      description: Фамилии наблюдателей через запятую (ИЛИ)
+      style: form
+      explode: false
+      schema: {type: array, items: {type: string, minLength: 1}, minItems: 1}
+    place_id:
+      name: place_id
+      in: query
+      schema: {$ref: '#/components/schemas/Id'}
+    place:
+      name: place
+      in: query
+      schema: {type: string}
+    phenophase_id:
+      name: phenophase_id
+      in: query
+      schema: {$ref: '#/components/schemas/Id'}
+    indicator:
+      name: indicator
+      in: query
+      schema: {type: string}
+    record_type:
+      name: record_type
+      in: query
+      schema: {$ref: '#/components/schemas/RecordType'}
+    document_id:
+      name: document_id
+      in: query
+      schema: {$ref: '#/components/schemas/Id'}
+    date_from:
+      name: date_from
+      in: query
+      description: Начало интервала; запись попадает, если [date_from, date_to] записи пересекается с интервалом
+      schema: {type: string, format: date}
+    date_to:
+      name: date_to
+      in: query
+      schema: {type: string, format: date}
+    years:
+      name: years
+      in: query
+      description: Годы наблюдения (obs_year) через запятую
+      style: form
+      explode: false
+      schema: {type: array, items: {type: integer}, minItems: 1}
+    doc_years:
+      name: doc_years
+      in: query
+      description: Годы книг (documents.year) через запятую. Расширение SPEC.
+      style: form
+      explode: false
+      schema: {type: array, items: {type: integer}, minItems: 1}
+    status:
+      name: status
+      in: query
+      schema: {$ref: '#/components/schemas/Status'}
+    flagged:
+      name: flagged
+      in: query
+      schema: {type: boolean}
+    sort:
+      name: sort
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortField'
+    order:
+      name: order
+      in: query
+      schema: {type: string, enum: [asc, desc], default: asc}
+    page:
+      name: page
+      in: query
+      schema: {type: integer, minimum: 1, default: 1}
+    page_size:
+      name: page_size
+      in: query
+      schema: {type: integer, minimum: 1, maximum: 500, default: 50}
+
+  responses:
+    BadRequest:
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+    NotFound:
+      description: Не найдено
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+    ValidationError:
+      description: Тело или параметры не прошли валидацию
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+
+  schemas:
+    # --- локальные схемы API ---
+    Health:
+      type: object
+      properties:
+        status: {type: string, enum: [ok, degraded]}
+        db: {type: boolean}
+        version: {type: string}
+      required: [status, db, version]
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Машинный код (bad_request, not_found, validation_error, conflict, unsupported_media_type, payload_too_large, internal)
+            message: {type: string, description: Сообщение по-русски}
+            details: {description: Подробности (например ошибки по полям)}
+          required: [code, message]
+      required: [error]
+    ObservationPage:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/ObservationListItem'}
+        total: {type: integer, minimum: 0}
+        page: {type: integer, minimum: 1}
+        page_size: {type: integer, minimum: 1}
+      required: [items, total, page, page_size]
+    ObservationDetail:
+      type: object
+      properties:
+        observation: {$ref: '#/components/schemas/ObservationListItem'}
+        chunk:
+          oneOf:
+            - $ref: '#/components/schemas/Chunk'
+            - type: 'null'
+        section:
+          oneOf:
+            - $ref: '#/components/schemas/Section'
+            - type: 'null'
+        document: {$ref: '#/components/schemas/Document'}
+        edits:
+          type: array
+          description: История правок, по возрастанию created_at
+          items: {$ref: '#/components/schemas/ObservationEdit'}
+      required: [observation, chunk, section, document, edits]
+
+    # --- схемы из observation.schema.json (единственный источник) ---
+    Id: {$ref: './observation.schema.json#/$defs/Id'}
+    RecordType: {$ref: './observation.schema.json#/$defs/RecordType'}
+    Status: {$ref: './observation.schema.json#/$defs/Status'}
+    Flag: {$ref: './observation.schema.json#/$defs/Flag'}
+    TaxonGroup: {$ref: './observation.schema.json#/$defs/TaxonGroup'}
+    SortField: {$ref: './observation.schema.json#/$defs/SortField'}
+    Locator: {$ref: './observation.schema.json#/$defs/Locator'}
+    Observation: {$ref: './observation.schema.json#/$defs/Observation'}
+    ObservationListItem: {$ref: './observation.schema.json#/$defs/ObservationListItem'}
+    ObservationPatch: {$ref: './observation.schema.json#/$defs/ObservationPatch'}
+    ObservationEdit: {$ref: './observation.schema.json#/$defs/ObservationEdit'}
+    Document: {$ref: './observation.schema.json#/$defs/Document'}
+    Section: {$ref: './observation.schema.json#/$defs/Section'}
+    Chunk: {$ref: './observation.schema.json#/$defs/Chunk'}
+    Taxon: {$ref: './observation.schema.json#/$defs/Taxon'}
+    TaxonName: {$ref: './observation.schema.json#/$defs/TaxonName'}
+    Place: {$ref: './observation.schema.json#/$defs/Place'}
+    PlaceName: {$ref: './observation.schema.json#/$defs/PlaceName'}
+    Person: {$ref: './observation.schema.json#/$defs/Person'}
+    Phenophase: {$ref: './observation.schema.json#/$defs/Phenophase'}
+    SearchFilters: {$ref: './observation.schema.json#/$defs/SearchFilters'}
+    SavedQuery: {$ref: './observation.schema.json#/$defs/SavedQuery'}
+    SavedQueryCreate: {$ref: './observation.schema.json#/$defs/SavedQueryCreate'}
+    QueryParseRequest: {$ref: './observation.schema.json#/$defs/QueryParseRequest'}
+    QueryParseResponse: {$ref: './observation.schema.json#/$defs/QueryParseResponse'}
+    PhenologyRow: {$ref: './observation.schema.json#/$defs/PhenologyRow'}
+    PlaceSpecies: {$ref: './observation.schema.json#/$defs/PlaceSpecies'}
+    SuggestItem: {$ref: './observation.schema.json#/$defs/SuggestItem'}
+    Quality: {$ref: './observation.schema.json#/$defs/Quality'}

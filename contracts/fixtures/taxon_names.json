@@ -1,0 +1,723 @@
+[
+  {
+    "id": 1,
+    "taxon_id": 1,
+    "name": "Salix caprea",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 2,
+    "taxon_id": 1,
+    "name": "Ива козья",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 3,
+    "taxon_id": 1,
+    "name": "ива козья",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 4,
+    "taxon_id": 2,
+    "name": "Tussilago farfara",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 5,
+    "taxon_id": 2,
+    "name": "Мать-и-мачеха",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 6,
+    "taxon_id": 2,
+    "name": "мать-и-мачеха обыкновенная",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 7,
+    "taxon_id": 3,
+    "name": "Betula nana",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 8,
+    "taxon_id": 3,
+    "name": "Береза карликовая",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 9,
+    "taxon_id": 3,
+    "name": "Берёза карликовая",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 10,
+    "taxon_id": 3,
+    "name": "карликовая березка",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 11,
+    "taxon_id": 4,
+    "name": "Betula pubescens",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 12,
+    "taxon_id": 4,
+    "name": "Береза пушистая",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 13,
+    "taxon_id": 4,
+    "name": "Берёза пушистая",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 14,
+    "taxon_id": 4,
+    "name": "Betula pubescens Ehrh.",
+    "lang": "lat",
+    "kind": "variant"
+  },
+  {
+    "id": 15,
+    "taxon_id": 5,
+    "name": "Pinus sylvestris",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 16,
+    "taxon_id": 5,
+    "name": "Сосна обыкновенная",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 17,
+    "taxon_id": 5,
+    "name": "Pinus sylvestris L.",
+    "lang": "lat",
+    "kind": "variant"
+  },
+  {
+    "id": 18,
+    "taxon_id": 6,
+    "name": "Rubus chamaemorus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 19,
+    "taxon_id": 6,
+    "name": "Морошка",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 20,
+    "taxon_id": 6,
+    "name": "Морошка приземистая",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 21,
+    "taxon_id": 7,
+    "name": "Vaccinium myrtillus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 22,
+    "taxon_id": 7,
+    "name": "Черника",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 23,
+    "taxon_id": 7,
+    "name": "Черника обыкновенная",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 24,
+    "taxon_id": 8,
+    "name": "Vaccinium vitis-idaea",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 25,
+    "taxon_id": 8,
+    "name": "Брусника",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 26,
+    "taxon_id": 8,
+    "name": "Брусника обыкновенная",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 27,
+    "taxon_id": 9,
+    "name": "Vaccinium uliginosum",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 28,
+    "taxon_id": 9,
+    "name": "Голубика",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 29,
+    "taxon_id": 9,
+    "name": "Голубика болотная",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 30,
+    "taxon_id": 10,
+    "name": "Empetrum hermaphroditum",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 31,
+    "taxon_id": 10,
+    "name": "Водяника обоеполая",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 32,
+    "taxon_id": 10,
+    "name": "Вороника",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 33,
+    "taxon_id": 10,
+    "name": "Вороника обоеполая",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 34,
+    "taxon_id": 11,
+    "name": "Rhododendron tomentosum",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 35,
+    "taxon_id": 11,
+    "name": "Багульник болотный",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 36,
+    "taxon_id": 11,
+    "name": "Ledum palustre",
+    "lang": "lat",
+    "kind": "synonym"
+  },
+  {
+    "id": 37,
+    "taxon_id": 11,
+    "name": "Ledum palustre L.",
+    "lang": "lat",
+    "kind": "synonym"
+  },
+  {
+    "id": 38,
+    "taxon_id": 12,
+    "name": "Cornus suecica",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 39,
+    "taxon_id": 12,
+    "name": "Дерен шведский",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 40,
+    "taxon_id": 12,
+    "name": "Chamaepericlymenum suecicum",
+    "lang": "lat",
+    "kind": "synonym"
+  },
+  {
+    "id": 41,
+    "taxon_id": 12,
+    "name": "Дёрен шведский",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 42,
+    "taxon_id": 13,
+    "name": "Geranium sylvaticum",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 43,
+    "taxon_id": 13,
+    "name": "Герань лесная",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 44,
+    "taxon_id": 13,
+    "name": "Geranium sylvaticum L.",
+    "lang": "lat",
+    "kind": "variant"
+  },
+  {
+    "id": 45,
+    "taxon_id": 13,
+    "name": "герани лесной",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 46,
+    "taxon_id": 14,
+    "name": "Trollius europaeus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 47,
+    "taxon_id": 14,
+    "name": "Купальница европейская",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 48,
+    "taxon_id": 14,
+    "name": "Trollius europaea",
+    "lang": "lat",
+    "kind": "variant"
+  },
+  {
+    "id": 49,
+    "taxon_id": 14,
+    "name": "Купальница европ.",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 50,
+    "taxon_id": 15,
+    "name": "Eriophorum vaginatum",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 51,
+    "taxon_id": 15,
+    "name": "Пушица влагалищная",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 52,
+    "taxon_id": 16,
+    "name": "Alces alces",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 53,
+    "taxon_id": 16,
+    "name": "Лось",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 54,
+    "taxon_id": 16,
+    "name": "лосиха",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 55,
+    "taxon_id": 16,
+    "name": "лосенок",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 56,
+    "taxon_id": 16,
+    "name": "Moose",
+    "lang": "lat",
+    "kind": "variant"
+  },
+  {
+    "id": 57,
+    "taxon_id": 17,
+    "name": "Ursus arctos",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 58,
+    "taxon_id": 17,
+    "name": "Бурый медведь",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 59,
+    "taxon_id": 17,
+    "name": "медведь",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 60,
+    "taxon_id": 17,
+    "name": "Ursus arctos L.",
+    "lang": "lat",
+    "kind": "variant"
+  },
+  {
+    "id": 61,
+    "taxon_id": 18,
+    "name": "Lepus timidus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 62,
+    "taxon_id": 18,
+    "name": "Заяц-беляк",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 63,
+    "taxon_id": 18,
+    "name": "Заяц беляк",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 64,
+    "taxon_id": 18,
+    "name": "беляк",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 65,
+    "taxon_id": 19,
+    "name": "Vulpes vulpes",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 66,
+    "taxon_id": 19,
+    "name": "Обыкновенная лисица",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 67,
+    "taxon_id": 19,
+    "name": "Лисица",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 68,
+    "taxon_id": 19,
+    "name": "лиса",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 69,
+    "taxon_id": 20,
+    "name": "Mustela erminea",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 70,
+    "taxon_id": 20,
+    "name": "Горностай",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 71,
+    "taxon_id": 21,
+    "name": "Neogale vison",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 72,
+    "taxon_id": 21,
+    "name": "Американская норка",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 73,
+    "taxon_id": 21,
+    "name": "Neovison vison",
+    "lang": "lat",
+    "kind": "synonym"
+  },
+  {
+    "id": 74,
+    "taxon_id": 21,
+    "name": "Mustela vison",
+    "lang": "lat",
+    "kind": "synonym"
+  },
+  {
+    "id": 75,
+    "taxon_id": 21,
+    "name": "Норка американская",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 76,
+    "taxon_id": 22,
+    "name": "Martes martes",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 77,
+    "taxon_id": 22,
+    "name": "Лесная куница",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 78,
+    "taxon_id": 22,
+    "name": "Куница",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 79,
+    "taxon_id": 23,
+    "name": "Gulo gulo",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 80,
+    "taxon_id": 23,
+    "name": "Росомаха",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 81,
+    "taxon_id": 24,
+    "name": "Sciurus vulgaris",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 82,
+    "taxon_id": 24,
+    "name": "Обыкновенная белка",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 83,
+    "taxon_id": 24,
+    "name": "Белка",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 84,
+    "taxon_id": 25,
+    "name": "Rangifer tarandus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 85,
+    "taxon_id": 25,
+    "name": "Северный олень",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 86,
+    "taxon_id": 26,
+    "name": "Cygnus cygnus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 87,
+    "taxon_id": 26,
+    "name": "Лебедь-кликун",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 88,
+    "taxon_id": 26,
+    "name": "кликун",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 89,
+    "taxon_id": 27,
+    "name": "Bucephala clangula",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 90,
+    "taxon_id": 27,
+    "name": "Гоголь",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 91,
+    "taxon_id": 27,
+    "name": "Обыкновенный гоголь",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 92,
+    "taxon_id": 28,
+    "name": "Lagopus lagopus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 93,
+    "taxon_id": 28,
+    "name": "Белая куропатка",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 94,
+    "taxon_id": 29,
+    "name": "Tetrao urogallus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 95,
+    "taxon_id": 29,
+    "name": "Глухарь",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 96,
+    "taxon_id": 29,
+    "name": "Обыкновенный глухарь",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 97,
+    "taxon_id": 30,
+    "name": "Cuculus canorus",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 98,
+    "taxon_id": 30,
+    "name": "Обыкновенная кукушка",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 99,
+    "taxon_id": 30,
+    "name": "Кукушка",
+    "lang": "ru",
+    "kind": "variant"
+  },
+  {
+    "id": 100,
+    "taxon_id": 31,
+    "name": "Parus major",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 101,
+    "taxon_id": 31,
+    "name": "Большая синица",
+    "lang": "ru",
+    "kind": "accepted"
+  },
+  {
+    "id": 102,
+    "taxon_id": 32,
+    "name": "Plectrophenax nivalis",
+    "lang": "lat",
+    "kind": "accepted"
+  },
+  {
+    "id": 103,
+    "taxon_id": 32,
+    "name": "Пуночка",
+    "lang": "ru",
+    "kind": "accepted"
+  }
+]

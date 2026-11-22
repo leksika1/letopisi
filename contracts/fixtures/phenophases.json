@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "code": "1",
+    "name_ru": "начало роста, начало распускания почек",
+    "applies_to": "plants",
+    "bbch": "BBCH 10",
+    "ord": 1
+  },
+  {
+    "id": 2,
+    "code": "2",
+    "name_ru": "начало развёртывания листьев, «зеленение» [10% экз.]",
+    "applies_to": "plants",
+    "bbch": "BBCH 11",
+    "ord": 2
+  },
+  {
+    "id": 3,
+    "code": "3",
+    "name_ru": "появление полного листа [10% экз.]",
+    "applies_to": "plants",
+    "bbch": "BBCH 12-13",
+    "ord": 3
+  },
+  {
+    "id": 4,
+    "code": "4",
+    "name_ru": "начало бутонизации [10% экз.]",
+    "applies_to": "plants",
+    "bbch": "BBCH 51",
+    "ord": 4
+  },
+  {
+    "id": 5,
+    "code": "5",
+    "name_ru": "начало цветения [10% экз.]",
+    "applies_to": "plants",
+    "bbch": "BBCH 60",
+    "ord": 5
+  },
+  {
+    "id": 6,
+    "code": "6",
+    "name_ru": "массовое цветение [50% экз. и более]",
+    "applies_to": "plants",
+    "bbch": "BBCH 65",
+    "ord": 6
+  },
+  {
+    "id": 7,
+    "code": "7",
+    "name_ru": "начало отцветания [10% экз.]",
+    "applies_to": "plants",
+    "bbch": "BBCH 66-67",
+    "ord": 7
+  },
+  {
+    "id": 8,
+    "code": "8",
+    "name_ru": "массовое отцветание [50% экз. и более]",
+    "applies_to": "plants",
+    "bbch": "BBCH 68-69",
+    "ord": 8
+  },
+  {
+    "id": 9,
+    "code": "9",
+    "name_ru": "полное отцветание",
+    "applies_to": "plants",
+    "bbch": "BBCH 69",
+    "ord": 9
+  },
+  {
+    "id": 10,
+    "code": "10а",
+    "name_ru": "начало образования плодов, соплодий [10% экз. имеют незрелые плоды]",
+    "applies_to": "plants",
+    "bbch": "BBCH 81-86",
+    "ord": 10
+  },
+  {
+    "id": 11,
+    "code": "10б",
+    "name_ru": "начало созревания плодов (начало рассеивания семян) [10% экз. имеют зрелые плоды, начинают рассеивать семена]",
+    "applies_to": "plants",
+    "bbch": "BBCH 81-86",
+    "ord": 11
+  },
+  {
+    "id": 12,
+    "code": "11",
+    "name_ru": "массовое созревание, поспевание плодов, массовое рассеивание семян [50% экз. и более]",
+    "applies_to": "plants",
+    "bbch": "BBCH 87",
+    "ord": 12
+  },
+  {
+    "id": 13,
+    "code": "12",
+    "name_ru": "начало изменения окраски листьев [10% экз.]",
+    "applies_to": "plants",
+    "bbch": "BBCH 92",
+    "ord": 13
+  },
+  {
+    "id": 14,
+    "code": "13",
+    "name_ru": "массовое изменение окраски листьев [50% экз. и более]",
+    "applies_to": "plants",
+    "bbch": "BBCH 94",
+    "ord": 14
+  },
+  {
+    "id": 15,
+    "code": "14",
+    "name_ru": "начало листопада, начало отмирания трав [10% экз.]",
+    "applies_to": "plants",
+    "bbch": "BBCH 93",
+    "ord": 15
+  },
+  {
+    "id": 16,
+    "code": "15",
+    "name_ru": "массовое опадение листьев [50% экз. и более], массовое отмирание у трав",
+    "applies_to": "plants",
+    "bbch": "BBCH 97",
+    "ord": 16
+  },
+  {
+    "id": 17,
+    "code": "16",
+    "name_ru": "окончание листопада, полное отмирание надземной части",
+    "applies_to": "plants",
+    "bbch": "BBCH 87",
+    "ord": 17
+  },
+  {
+    "id": 18,
+    "code": "arrival",
+    "name_ru": "прилёт (первая встреча весной перелётного вида)",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 18
+  },
+  {
+    "id": 19,
+    "code": "first_song",
+    "name_ru": "первая песня / первое кукование",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 19
+  },
+  {
+    "id": 20,
+    "code": "first_seen_spring",
+    "name_ru": "первая встреча весной (выход из берлоги, спячки)",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 20
+  },
+  {
+    "id": 21,
+    "code": "breeding",
+    "name_ru": "гнездование, кладка яиц, гон",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 21
+  },
+  {
+    "id": 22,
+    "code": "young",
+    "name_ru": "появление молодняка (выводок, новорождённые)",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 22
+  },
+  {
+    "id": 23,
+    "code": "moult_summer",
+    "name_ru": "переход в летний наряд (мех, оперение)",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 23
+  },
+  {
+    "id": 24,
+    "code": "moult_winter",
+    "name_ru": "переход в зимний наряд (мех, оперение)",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 24
+  },
+  {
+    "id": 25,
+    "code": "departure",
+    "name_ru": "отлёт / последняя встреча осенью",
+    "applies_to": "animals",
+    "bbch": null,
+    "ord": 25
+  }
+]

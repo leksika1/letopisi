@@ -1,0 +1,187 @@
+[
+  {
+    "id": 1,
+    "surname": "Макарова",
+    "initials": null,
+    "full_raw": "Макарова",
+    "years_active": [
+      1995,
+      1996
+    ],
+    "year_start": 1992,
+    "year_end": 2019,
+    "still_working": false
+  },
+  {
+    "id": 2,
+    "surname": "Хохлов",
+    "initials": null,
+    "full_raw": "Хохлов",
+    "years_active": [
+      1995,
+      1996
+    ],
+    "year_start": 1992,
+    "year_end": 2011,
+    "still_working": false
+  },
+  {
+    "id": 3,
+    "surname": "Шершнев",
+    "initials": null,
+    "full_raw": "Шершнев",
+    "years_active": [
+      1995,
+      1996
+    ],
+    "year_start": null,
+    "year_end": null,
+    "still_working": null
+  },
+  {
+    "id": 4,
+    "surname": "Сметанников",
+    "initials": null,
+    "full_raw": "Сметанников",
+    "years_active": [
+      1995,
+      1996
+    ],
+    "year_start": 1994,
+    "year_end": 1997,
+    "still_working": false
+  },
+  {
+    "id": 5,
+    "surname": "Поликарпова",
+    "initials": null,
+    "full_raw": "Поликарпова",
+    "years_active": [
+      2020
+    ],
+    "year_start": null,
+    "year_end": null,
+    "still_working": null
+  },
+  {
+    "id": 6,
+    "surname": "Воробьева",
+    "initials": null,
+    "full_raw": "Воробьева",
+    "years_active": [
+      2020
+    ],
+    "year_start": null,
+    "year_end": 2024,
+    "still_working": false
+  },
+  {
+    "id": 7,
+    "surname": "Крюкова",
+    "initials": null,
+    "full_raw": "Крюкова",
+    "years_active": [
+      2020
+    ],
+    "year_start": null,
+    "year_end": null,
+    "still_working": null
+  },
+  {
+    "id": 8,
+    "surname": "Валова",
+    "initials": null,
+    "full_raw": "Валова",
+    "years_active": [
+      2020
+    ],
+    "year_start": 2019,
+    "year_end": null,
+    "still_working": true
+  },
+  {
+    "id": 9,
+    "surname": "Шаврина",
+    "initials": null,
+    "full_raw": "Шаврина",
+    "years_active": [
+      2020
+    ],
+    "year_start": 2020,
+    "year_end": null,
+    "still_working": true
+  },
+  {
+    "id": 10,
+    "surname": "Дмитренко",
+    "initials": null,
+    "full_raw": "Дмитренко",
+    "years_active": [
+      2020
+    ],
+    "year_start": null,
+    "year_end": null,
+    "still_working": null
+  },
+  {
+    "id": 11,
+    "surname": "Бычков",
+    "initials": null,
+    "full_raw": "Бычков",
+    "years_active": [
+      1996,
+      2020
+    ],
+    "year_start": null,
+    "year_end": null,
+    "still_working": true
+  },
+  {
+    "id": 12,
+    "surname": "Кротова",
+    "initials": null,
+    "full_raw": "Кротова",
+    "years_active": [
+      2020
+    ],
+    "year_start": null,
+    "year_end": null,
+    "still_working": null
+  },
+  {
+    "id": 13,
+    "surname": "Обойщиков",
+    "initials": null,
+    "full_raw": "Обойщиков",
+    "years_active": [
+      2020
+    ],
+    "year_start": null,
+    "year_end": 2021,
+    "still_working": false
+  },
+  {
+    "id": 14,
+    "surname": "Снегирев",
+    "initials": null,
+    "full_raw": "Снегирев",
+    "years_active": [
+      2020
+    ],
+    "year_start": null,
+    "year_end": 2021,
+    "still_working": false
+  },
+  {
+    "id": 15,
+    "surname": "Сметанникова",
+    "initials": null,
+    "full_raw": "Сметанникова",
+    "years_active": [
+      1996
+    ],
+    "year_start": null,
+    "year_end": null,
+    "still_working": null
+  }
+]

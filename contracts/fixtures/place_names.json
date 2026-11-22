@@ -1,0 +1,422 @@
+[
+  {
+    "id": 1,
+    "place_id": 1,
+    "name": "Паз",
+    "kind": "accepted"
+  },
+  {
+    "id": 2,
+    "place_id": 1,
+    "name": "р. Паз",
+    "kind": "variant"
+  },
+  {
+    "id": 3,
+    "place_id": 1,
+    "name": "реки Паз",
+    "kind": "variant"
+  },
+  {
+    "id": 4,
+    "place_id": 1,
+    "name": "река Паз",
+    "kind": "variant"
+  },
+  {
+    "id": 5,
+    "place_id": 2,
+    "name": "Пасвик",
+    "kind": "accepted"
+  },
+  {
+    "id": 6,
+    "place_id": 2,
+    "name": "заповедник «Пасвик»",
+    "kind": "variant"
+  },
+  {
+    "id": 7,
+    "place_id": 2,
+    "name": "заповедник \"Пасвик\"",
+    "kind": "variant"
+  },
+  {
+    "id": 8,
+    "place_id": 3,
+    "name": "Варлама",
+    "kind": "accepted"
+  },
+  {
+    "id": 9,
+    "place_id": 3,
+    "name": "о. Варлама",
+    "kind": "variant"
+  },
+  {
+    "id": 10,
+    "place_id": 3,
+    "name": "о-в Варлама",
+    "kind": "variant"
+  },
+  {
+    "id": 11,
+    "place_id": 3,
+    "name": "о-ве Варлама",
+    "kind": "variant"
+  },
+  {
+    "id": 12,
+    "place_id": 3,
+    "name": "остров Варлама",
+    "kind": "variant"
+  },
+  {
+    "id": 13,
+    "place_id": 4,
+    "name": "Калкупя",
+    "kind": "accepted"
+  },
+  {
+    "id": 14,
+    "place_id": 4,
+    "name": "г. Калкупя",
+    "kind": "variant"
+  },
+  {
+    "id": 15,
+    "place_id": 4,
+    "name": "гора Калкупя",
+    "kind": "variant"
+  },
+  {
+    "id": 16,
+    "place_id": 4,
+    "name": "горы Калкупя",
+    "kind": "variant"
+  },
+  {
+    "id": 17,
+    "place_id": 4,
+    "name": "Калкупи",
+    "kind": "variant"
+  },
+  {
+    "id": 18,
+    "place_id": 5,
+    "name": "Раякоски",
+    "kind": "accepted"
+  },
+  {
+    "id": 19,
+    "place_id": 5,
+    "name": "пос. Раякоски",
+    "kind": "variant"
+  },
+  {
+    "id": 20,
+    "place_id": 6,
+    "name": "Янискоски",
+    "kind": "accepted"
+  },
+  {
+    "id": 21,
+    "place_id": 6,
+    "name": "пос. Янискоски",
+    "kind": "variant"
+  },
+  {
+    "id": 22,
+    "place_id": 7,
+    "name": "Кайтакоски",
+    "kind": "accepted"
+  },
+  {
+    "id": 23,
+    "place_id": 8,
+    "name": "Наутси",
+    "kind": "accepted"
+  },
+  {
+    "id": 24,
+    "place_id": 9,
+    "name": "Наутсийоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 25,
+    "place_id": 9,
+    "name": "р. Наутсийоки",
+    "kind": "variant"
+  },
+  {
+    "id": 26,
+    "place_id": 10,
+    "name": "Каскама",
+    "kind": "accepted"
+  },
+  {
+    "id": 27,
+    "place_id": 10,
+    "name": "г. Каскама",
+    "kind": "variant"
+  },
+  {
+    "id": 28,
+    "place_id": 10,
+    "name": "гора Каскама",
+    "kind": "variant"
+  },
+  {
+    "id": 29,
+    "place_id": 11,
+    "name": "Ворьема",
+    "kind": "accepted"
+  },
+  {
+    "id": 30,
+    "place_id": 12,
+    "name": "Мениккайоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 31,
+    "place_id": 12,
+    "name": "р. Мениккайоки",
+    "kind": "variant"
+  },
+  {
+    "id": 32,
+    "place_id": 12,
+    "name": "река Мениккайоки",
+    "kind": "variant"
+  },
+  {
+    "id": 33,
+    "place_id": 13,
+    "name": "Каскамаярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 34,
+    "place_id": 13,
+    "name": "оз. Каскамаярви",
+    "kind": "variant"
+  },
+  {
+    "id": 35,
+    "place_id": 13,
+    "name": "озеро Каскамаярви",
+    "kind": "variant"
+  },
+  {
+    "id": 36,
+    "place_id": 13,
+    "name": "озера Каскамаярви",
+    "kind": "variant"
+  },
+  {
+    "id": 37,
+    "place_id": 14,
+    "name": "Боссояврре",
+    "kind": "accepted"
+  },
+  {
+    "id": 38,
+    "place_id": 15,
+    "name": "Кайтоярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 39,
+    "place_id": 16,
+    "name": "Куэтсъярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 40,
+    "place_id": 17,
+    "name": "Валькеаярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 41,
+    "place_id": 18,
+    "name": "Хеюхенъярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 42,
+    "place_id": 19,
+    "name": "Сальмиярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 43,
+    "place_id": 19,
+    "name": "оз. Сальмиярви",
+    "kind": "variant"
+  },
+  {
+    "id": 44,
+    "place_id": 19,
+    "name": "застава Сальмиярви",
+    "kind": "variant"
+  },
+  {
+    "id": 45,
+    "place_id": 20,
+    "name": "Шуонийоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 46,
+    "place_id": 21,
+    "name": "Колоссйоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 47,
+    "place_id": 22,
+    "name": "Каскамайоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 48,
+    "place_id": 23,
+    "name": "Лауккуярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 49,
+    "place_id": 24,
+    "name": "Лауккуйоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 50,
+    "place_id": 24,
+    "name": "р. Лауккуйоки",
+    "kind": "variant"
+  },
+  {
+    "id": 51,
+    "place_id": 25,
+    "name": "Нилийоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 52,
+    "place_id": 26,
+    "name": "Нилиярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 53,
+    "place_id": 27,
+    "name": "Воуватусъярви",
+    "kind": "accepted"
+  },
+  {
+    "id": 54,
+    "place_id": 28,
+    "name": "Каттоламполо",
+    "kind": "accepted"
+  },
+  {
+    "id": 55,
+    "place_id": 29,
+    "name": "Кораблекк",
+    "kind": "accepted"
+  },
+  {
+    "id": 56,
+    "place_id": 30,
+    "name": "Латвала",
+    "kind": "accepted"
+  },
+  {
+    "id": 57,
+    "place_id": 30,
+    "name": "урочище Латвала",
+    "kind": "variant"
+  },
+  {
+    "id": 58,
+    "place_id": 30,
+    "name": "ур. Латвала",
+    "kind": "variant"
+  },
+  {
+    "id": 59,
+    "place_id": 31,
+    "name": "Мениккасаари",
+    "kind": "accepted"
+  },
+  {
+    "id": 60,
+    "place_id": 31,
+    "name": "болото Мениккасаари",
+    "kind": "variant"
+  },
+  {
+    "id": 61,
+    "place_id": 32,
+    "name": "Кайтоапа",
+    "kind": "accepted"
+  },
+  {
+    "id": 62,
+    "place_id": 32,
+    "name": "болото Кайтоапа",
+    "kind": "variant"
+  },
+  {
+    "id": 63,
+    "place_id": 33,
+    "name": "Кувернеринйоки",
+    "kind": "accepted"
+  },
+  {
+    "id": 64,
+    "place_id": 34,
+    "name": "Заполярный",
+    "kind": "accepted"
+  },
+  {
+    "id": 65,
+    "place_id": 34,
+    "name": "г. Заполярный",
+    "kind": "variant"
+  },
+  {
+    "id": 66,
+    "place_id": 35,
+    "name": "Никель",
+    "kind": "accepted"
+  },
+  {
+    "id": 67,
+    "place_id": 35,
+    "name": "пгт. Никель",
+    "kind": "variant"
+  },
+  {
+    "id": 68,
+    "place_id": 35,
+    "name": "пос. Никель",
+    "kind": "variant"
+  },
+  {
+    "id": 69,
+    "place_id": 36,
+    "name": "Борисоглебский",
+    "kind": "accepted"
+  },
+  {
+    "id": 70,
+    "place_id": 37,
+    "name": "Йорданфосс",
+    "kind": "accepted"
+  }
+]

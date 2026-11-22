@@ -1,0 +1,77 @@
+[
+  {
+    "header": "Дата наблюдения",
+    "source": "date_from, date_to, date_precision",
+    "rule": "day: ДД.ММ.ГГГГ; range: «ДД.ММ.ГГГГ–ДД.ММ.ГГГГ»; decade/month/season: date_raw; year: ГГГГ; нет даты: date_raw или пусто."
+  },
+  {
+    "header": "Год наблюдения",
+    "source": "obs_year",
+    "rule": "Целое число; пусто, если null."
+  },
+  {
+    "header": "ФИО наблюдателя",
+    "source": "observers_raw",
+    "rule": "Как в тексте; если null — фамилии persons по person_ids через «, »."
+  },
+  {
+    "header": "Наименование вида (русский)",
+    "source": "labels.taxon_name_ru | object_raw",
+    "rule": "Русское название из справочника taxa (taxon_id); если taxon_id null — object_raw (для publication — pub_title)."
+  },
+  {
+    "header": "Наименование вида (латынь)",
+    "source": "labels.taxon_name_lat",
+    "rule": "Латинское название из taxa; пусто, если taxon_id null."
+  },
+  {
+    "header": "Место регистрации (топоним)",
+    "source": "toponym_raw | labels.place_name",
+    "rule": "toponym_raw как в тексте; если null — название места из places (place_id); иначе пусто."
+  },
+  {
+    "header": "Координаты встречи",
+    "source": "coords_raw | places.lat, places.lon",
+    "rule": "coords_raw; если null и у места есть координаты — «lat, lon (приблизительно, coords_source)»; иначе «нет»."
+  },
+  {
+    "header": "Местообитание",
+    "source": "habitat_raw",
+    "rule": "Как в тексте; пусто, если null."
+  },
+  {
+    "header": "Характер явления, наблюдения",
+    "source": "event_raw",
+    "rule": "Как в тексте; для publication — «публикация: » + pub_authors + pub_title + pub_venue + pub_year."
+  },
+  {
+    "header": "Численные показатели",
+    "source": "value_num, value_raw, unit",
+    "rule": "value_num (десятичный разделитель — точка в CSV, число в XLSX); если null — value_raw; иначе «нет»."
+  },
+  {
+    "header": "Фенологическая фаза",
+    "source": "phenophase_id → phenophases.code, phenophases.name_ru | phenophase_raw",
+    "rule": "«фаза <code> - <name_ru>» для растений, <name_ru> для животных; если phenophase_id null — phenophase_raw; иначе «не фиксировалась»."
+  },
+  {
+    "header": "Ссылка на страницу/-цы в документе",
+    "source": "printed_pages + \", том \" + documents.book_no",
+    "rule": "Например «76-77, том 2»; если printed_pages null — «PDF стр. <locator.pdf_page>, том <book_no>»."
+  },
+  {
+    "header": "Примечание",
+    "source": "note",
+    "rule": "Как есть; пусто, если null."
+  },
+  {
+    "header": "Источник (ссылка)",
+    "source": "document_id, locator.pdf_page, id",
+    "rule": "Абсолютная ссылка на карточку записи в веб-интерфейсе: <BASE_URL>/observations/<id>?page=<locator.pdf_page> (открывает исходную страницу с подсветкой bboxes). В XLSX — гиперссылка с текстом «<documents.title>, PDF стр. <pdf_page>»."
+  },
+  {
+    "header": "Достоверность",
+    "source": "status, flags, confidence",
+    "rule": "«<status по-русски>» + при наличии флагов «; флаги: <flags через запятую>». status: auto → «авто», verified → «подтверждено», edited → «исправлено», rejected → «отклонено». Записи со status=rejected в выгрузку не попадают, если фильтр status не задан явно."
+  }
+]

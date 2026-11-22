@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1,
+    "document_id": 1,
+    "parent_id": null,
+    "code": null,
+    "title": "Млекопитающие. Результаты зимнего маршрутного учета зверей и птиц (март 1995 года)",
+    "pdf_page_from": 40,
+    "pdf_page_to": 40
+  },
+  {
+    "id": 10,
+    "document_id": 3,
+    "parent_id": null,
+    "code": "4",
+    "title": "Погода",
+    "pdf_page_from": 11,
+    "pdf_page_to": 40
+  },
+  {
+    "id": 11,
+    "document_id": 3,
+    "parent_id": 10,
+    "code": "4.2",
+    "title": "Даты начала сезонов, продолжительность, температура воздуха",
+    "pdf_page_from": 12,
+    "pdf_page_to": 35
+  },
+  {
+    "id": 12,
+    "document_id": 3,
+    "parent_id": null,
+    "code": "6",
+    "title": "Календарь природы",
+    "pdf_page_from": 46,
+    "pdf_page_to": 49
+  },
+  {
+    "id": 13,
+    "document_id": 3,
+    "parent_id": null,
+    "code": "7",
+    "title": "Флора и растительность",
+    "pdf_page_from": 50,
+    "pdf_page_to": 94
+  },
+  {
+    "id": 14,
+    "document_id": 3,
+    "parent_id": 13,
+    "code": "7.3",
+    "title": "Сезонная динамика растительных сообществ",
+    "pdf_page_from": 69,
+    "pdf_page_to": 78
+  },
+  {
+    "id": 15,
+    "document_id": 3,
+    "parent_id": null,
+    "code": "8",
+    "title": "Фауна и животный мир",
+    "pdf_page_from": 95,
+    "pdf_page_to": 520
+  },
+  {
+    "id": 16,
+    "document_id": 3,
+    "parent_id": 15,
+    "code": "8.4",
+    "title": "Птицы",
+    "pdf_page_from": 143,
+    "pdf_page_to": 448
+  },
+  {
+    "id": 17,
+    "document_id": 3,
+    "parent_id": 15,
+    "code": "8.5",
+    "title": "Млекопитающие",
+    "pdf_page_from": 449,
+    "pdf_page_to": 520
+  },
+  {
+    "id": 18,
+    "document_id": 3,
+    "parent_id": null,
+    "code": "10",
+    "title": "Научные исследования",
+    "pdf_page_from": 523,
+    "pdf_page_to": 550
+  },
+  {
+    "id": 19,
+    "document_id": 3,
+    "parent_id": null,
+    "code": null,
+    "title": "Библиографический список",
+    "pdf_page_from": 600,
+    "pdf_page_to": 610
+  }
+]

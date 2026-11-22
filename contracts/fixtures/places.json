@@ -1,0 +1,298 @@
+[
+  {
+    "id": 1,
+    "name": "Паз",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 2,
+    "name": "Пасвик",
+    "category": "река (норвеское название), российский заповедник, норвежский заповедник",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 3,
+    "name": "Варлама",
+    "category": "остров",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 4,
+    "name": "Калкупя",
+    "category": "гора",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 5,
+    "name": "Раякоски",
+    "category": "поселок",
+    "lat": 69.03,
+    "lon": 29.02,
+    "coords_source": "manual_approx"
+  },
+  {
+    "id": 6,
+    "name": "Янискоски",
+    "category": "поселок",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 7,
+    "name": "Кайтакоски",
+    "category": "урочище, ГЭС",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 8,
+    "name": "Наутси",
+    "category": "река, урочище",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 9,
+    "name": "Наутсийоки",
+    "category": "река (то же, что и Наутси)",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 10,
+    "name": "Каскама",
+    "category": "гора",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 11,
+    "name": "Ворьема",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 12,
+    "name": "Мениккайоки",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 13,
+    "name": "Каскамаярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 14,
+    "name": "Боссояврре",
+    "category": "залив реки Паз",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 15,
+    "name": "Кайтоярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 16,
+    "name": "Куэтсъярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 17,
+    "name": "Валькеаярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 18,
+    "name": "Хеюхенъярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 19,
+    "name": "Сальмиярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 20,
+    "name": "Шуонийоки",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 21,
+    "name": "Колоссйоки",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 22,
+    "name": "Каскамайоки",
+    "category": "ручей",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 23,
+    "name": "Лауккуярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 24,
+    "name": "Лауккуйоки",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 25,
+    "name": "Нилийоки",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 26,
+    "name": "Нилиярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 27,
+    "name": "Воуватусъярви",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 28,
+    "name": "Каттоламполо",
+    "category": "озеро",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 29,
+    "name": "Кораблекк",
+    "category": "гора",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 30,
+    "name": "Латвала",
+    "category": "урочище",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 31,
+    "name": "Мениккасаари",
+    "category": "болотный массив, урочище",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 32,
+    "name": "Кайтоапа",
+    "category": "болото",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 33,
+    "name": "Кувернеринйоки",
+    "category": "река",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 34,
+    "name": "Заполярный",
+    "category": "населённый пункт",
+    "lat": 69.42,
+    "lon": 30.8,
+    "coords_source": "manual_approx"
+  },
+  {
+    "id": 35,
+    "name": "Никель",
+    "category": "населённый пункт",
+    "lat": 69.41,
+    "lon": 30.22,
+    "coords_source": "manual_approx"
+  },
+  {
+    "id": 36,
+    "name": "Борисоглебский",
+    "category": "населённый пункт",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  },
+  {
+    "id": 37,
+    "name": "Йорданфосс",
+    "category": "порог/водопад",
+    "lat": null,
+    "lon": null,
+    "coords_source": null
+  }
+]
